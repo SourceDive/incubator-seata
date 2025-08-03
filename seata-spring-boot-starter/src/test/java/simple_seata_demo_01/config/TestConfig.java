@@ -1,5 +1,6 @@
 package simple_seata_demo_01.config;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import simple_seata_demo_01.service.AccountService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -27,8 +28,13 @@ public class TestConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 
-//    @Bean
-//    public AccountService accountService(DataSource dataSource) {
-//        return new AccountService(dataSource);
-//    }
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public AccountService accountService(JdbcTemplate jdbcTemplate) {
+        return new AccountService(jdbcTemplate);
+    }
 }

@@ -7,19 +7,16 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 
-@Service
 public class AccountService {
-    @Autowired
-    public DataSource dataSource;
 
     private final JdbcTemplate jdbcTemplate;
 
-    public AccountService(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public AccountService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @GlobalTransactional
-    public void transferCommit(int fromId, int toId, int amount) {
+    public void transferMoneyCommit(int fromId, int toId, int amount) {
         jdbcTemplate.update("UPDATE account SET balance = balance - ? WHERE id = ?", amount, fromId);
         jdbcTemplate.update("UPDATE account SET balance = balance + ? WHERE id = ?", amount, toId);
     }
