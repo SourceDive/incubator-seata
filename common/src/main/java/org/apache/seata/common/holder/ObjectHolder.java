@@ -32,10 +32,12 @@ public enum ObjectHolder {
     private static final int MAP_SIZE = 8;
     private static final Map<String, Object> OBJECT_MAP = new ConcurrentHashMap<>(MAP_SIZE);
 
+    // 根据名称
     public Object getObject(String objectKey) {
         return OBJECT_MAP.get(objectKey);
     }
 
+    // 根据类型
     public <T> T getObject(Class<T> clasz) {
         return clasz.cast(OBJECT_MAP.values().stream().filter(clasz::isInstance).findAny().orElseThrow(() -> new ShouldNeverHappenException("Can't find any object of class " + clasz.getName())));
     }
