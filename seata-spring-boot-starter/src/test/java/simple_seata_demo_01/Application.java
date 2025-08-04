@@ -2,7 +2,10 @@
 
 package simple_seata_demo_01;
 
-import org.jetbrains.annotations.Nullable;
+import org.apache.seata.core.context.RootContext;
+import org.apache.seata.rm.datasource.undo.UndoLogManager;
+import org.apache.seata.rm.datasource.undo.UndoLogManagerFactory;
+import org.apache.seata.rm.datasource.undo.mysql.MySQLUndoLogManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * 快速验证 Seata 的基本工作原理
@@ -31,14 +35,29 @@ class Application {
 
     // 每个测试前重建表结构
     @BeforeAll
-    static void setup(@Autowired DataSource dataSource) throws SQLException {
+    static void setup(@Autowired DataSource dataSource, @Autowired JdbcTemplate jdbcTemplate) throws SQLException {
         // 初始化H2数据库表结构
-        JdbcTemplate jdbc = new JdbcTemplate(dataSource);
-        jdbc.execute("CREATE TABLE account (id INT PRIMARY KEY, name VARCHAR(50), balance INT)");
-        jdbc.execute("INSERT INTO account VALUES (1, 'UserA', 1000)"); // 01. 初始： A 1000元, B 1000元
-        jdbc.execute("INSERT INTO account VALUES (2, 'UserB', 1000)");
+        jdbcTemplate.execute("CREATE TABLE if not exists account (id INT PRIMARY KEY, name VARCHAR(50), balance INT)");
+
+        // 必须创建 undo_log 表（AT模式核心）
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS undo_log (" +
+                "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
+                "branch_id BIGINT NOT NULL," +
+                "xid VARCHAR(100) NOT NULL," +
+                "context VARCHAR(128) NOT NULL," +
+                "rollback_info LONGBLOB NOT NULL," +
+                "log_status INT NOT NULL," +
+                "log_created DATETIME NOT NULL," +
+                "log_modified DATETIME NOT NULL," +
+                "UNIQUE KEY ux_undo_log (xid, branch_id)" +
+                ")");
+
+        jdbcTemplate.update("delete from account");
+        jdbcTemplate.execute("INSERT INTO account VALUES (1, 'UserA', 1000)"); // 01. 初始： A 1000元, B 1000元
+        jdbcTemplate.execute("INSERT INTO account VALUES (2, 'UserB', 1000)");
     }
 
+    // OK
     @Test
     void testCommit() {
         // A 给 B 转100元
@@ -54,18 +73,25 @@ class Application {
     }
 
 
+    /**
+     * 下面这个案例回滚不成功啊。
+     */
     @Test
     void testRollback() {
-//        assertThrows(RuntimeException.class, () ->
-//                accountService.transferRollback(1, 2, 100)
-//        );
+        // 转账前
+        int balanceA = getBalance(1);
+        int balanceB = getBalance(2);
 
-//        JdbcTemplate jdbc = new JdbcTemplate(accountService.dataSource);
-//        int balanceA = getBalance(jdbc);
-//        int balanceB = jdbc.queryForObject("SELECT balance FROM account WHERE id=2", Integer.class);
+        assertThrows(RuntimeException.class, () ->
+                accountService.transferRollback(1, 2, 100)
+        );
 
-//        assertEquals(1000, balanceA);
-//        assertEquals(1000, balanceB);
+        // 转账后
+        balanceA = getBalance(1);
+        balanceB = getBalance(2);
+
+        assertEquals(1000, balanceA);
+        assertEquals(1000, balanceB);
     }
 
 
@@ -74,8 +100,13 @@ class Application {
         org.h2.tools.Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
     }
 
-    @Nullable
-    private Integer getBalance(int id) {
+    private int getBalance(int id) {
         return jdbcTemplate.queryForObject("SELECT balance FROM account WHERE id=?", Integer.class, id);
+    }
+
+    @Test
+    public void testUndoLogManager() {
+        UndoLogManager undoLogManager = UndoLogManagerFactory.getUndoLogManager("mysql");
+        assertEquals(MySQLUndoLogManager.class, undoLogManager.getClass());
     }
 }
