@@ -14,12 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import simple_seata_demo_01.config.TestConfig;
 import simple_seata_demo_01.service.AccountService;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -27,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 25.08.01 Fri
  */
 @SpringBootTest(classes = {TestConfig.class}) // 告诉 spring 加载 AccountService
-class Application {
+class ApplicationTest {
 
     @Autowired
     private AccountService accountService;
@@ -41,11 +39,11 @@ class Application {
         try {
             // 等待一段时间，让之前的锁释放
             Thread.sleep(2000);
-            
+
             // 使用REPLACE INTO避免锁冲突
             jdbcTemplate.execute("REPLACE INTO account VALUES (1, 'UserA', 1000)");
             jdbcTemplate.execute("REPLACE INTO account VALUES (2, 'UserB', 1000)");
-            
+
             System.out.println("数据初始化完成");
         } catch (Exception e) {
             System.out.println("初始化数据时出现异常: " + e.getMessage());
@@ -76,9 +74,8 @@ class Application {
 
 
     /**
-     * 测试回滚功能
-     * 注意：这个测试在没有TC服务器的情况下，@GlobalTransactional不会生效
-     * 所以实际上只是普通的Spring事务回滚
+     * 测试真正的分布式事务回滚功能
+     * 现在有TC服务器，@GlobalTransactional应该生效
      */
     @Test
     void testRollback() {
@@ -87,11 +84,20 @@ class Application {
         int balanceB = getBalance(2);
         System.out.println("转账前 - A余额: " + balanceA + ", B余额: " + balanceB);
 
+        // 检查全局事务状态
+        String xid = RootContext.getXID();
+        System.out.println("执行前XID: " + (xid != null ? xid : "null"));
+
         // 执行会抛出异常的转账操作
         try {
+            // 这里调用带有@GlobalTransactional注解的方法
             accountService.transferRollback(1, 2, 100);
         } catch (RuntimeException e) {
             System.out.println("捕获到异常: " + e.getMessage());
+
+            // 检查异常后的XID
+            String xidAfter = RootContext.getXID();
+            System.out.println("异常后XID: " + (xidAfter != null ? xidAfter : "null"));
         }
 
         // 转账后检查余额
@@ -99,15 +105,12 @@ class Application {
         int balanceBAfter = getBalance(2);
         System.out.println("转账后 - A余额: " + balanceAAfter + ", B余额: " + balanceBAfter);
 
-        // 验证：由于没有TC服务器，@GlobalTransactional不生效，所以数据可能被更新了
-        // 这里我们验证异常确实被抛出了
-        assertThrows(RuntimeException.class, () ->
-                accountService.transferRollback(1, 2, 100)
-        );
-        
-        // 注意：在没有TC服务器的情况下，数据可能已经被更新
-        // 真正的分布式事务回滚需要启动Seata TC服务器
-        System.out.println("注意：要测试真正的分布式事务回滚，需要启动Seata TC服务器");
+        // 验证：现在有TC服务器，@GlobalTransactional应该生效
+        // 两个SQL都应该回滚，余额保持不变
+        assertEquals(1000, balanceAAfter, "A的余额应该保持1000不变");
+        assertEquals(1000, balanceBAfter, "B的余额应该保持1000不变");
+
+        System.out.println("✅ 分布式事务回滚测试通过！");
     }
 
     /**
@@ -142,21 +145,94 @@ class Application {
     }
 
     /**
+     * 测试Seata客户端是否正确初始化
+     */
+    @Test
+    void testSeataClientInit() {
+        System.out.println("=== 测试Seata客户端初始化 ===");
+
+        // 检查DataSourceProxy是否正确创建
+        try {
+            if (jdbcTemplate.getDataSource() instanceof org.apache.seata.rm.datasource.DataSourceProxy) {
+                System.out.println("✅ DataSourceProxy已正确创建");
+            } else {
+                System.out.println("❌ DataSourceProxy未正确创建，实际类型: " + jdbcTemplate.getDataSource().getClass());
+            }
+        } catch (Exception e) {
+            System.out.println("❌ 检查DataSourceProxy失败: " + e.getMessage());
+        }
+
+        // 检查AccountService是否被正确代理
+        try {
+            if (accountService.getClass().getName().contains("$$")) {
+                System.out.println("✅ AccountService已被Spring AOP代理");
+            } else {
+                System.out.println("❌ AccountService未被Spring AOP代理，实际类型: " + accountService.getClass());
+            }
+        } catch (Exception e) {
+            System.out.println("❌ 检查AccountService代理失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 测试全局事务是否正确启动
+     */
+    @Test
+    void testGlobalTransaction() {
+        System.out.println("=== 测试全局事务启动 ===");
+
+        // 检查初始状态
+        String initialXid = RootContext.getXID();
+        System.out.println("初始XID: " + (initialXid != null ? initialXid : "null"));
+
+        // 尝试启动全局事务
+        try {
+            // 手动绑定XID（模拟全局事务启动）
+            String testXid = "test-xid-" + System.currentTimeMillis();
+            RootContext.bind(testXid);
+            System.out.println("手动绑定XID: " + testXid);
+
+            // 检查绑定后的状态
+            String boundXid = RootContext.getXID();
+            System.out.println("绑定后XID: " + (boundXid != null ? boundXid : "null"));
+
+            // 执行转账操作
+            accountService.transferMoneyCommit(1, 2, 50);
+
+            // 检查执行后的状态
+            String afterXid = RootContext.getXID();
+            System.out.println("执行后XID: " + (afterXid != null ? afterXid : "null"));
+
+        } catch (Exception e) {
+            System.out.println("执行过程中出现异常: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // 清理XID
+            RootContext.unbind();
+            System.out.println("已清理XID");
+        }
+
+        // 检查最终状态
+        String finalXid = RootContext.getXID();
+        System.out.println("最终XID: " + (finalXid != null ? finalXid : "null"));
+    }
+
+    /**
      * 清理数据库锁的测试方法
      */
     @Test
     void testCleanup() {
         System.out.println("清理测试 - 验证数据库连接正常");
-        
+
         // 简单查询验证连接
         int count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM account", Integer.class);
         System.out.println("账户表记录数: " + count);
-        
+
         // 验证余额
         int balanceA = getBalance(1);
         int balanceB = getBalance(2);
         System.out.println("当前余额 - A: " + balanceA + ", B: " + balanceB);
-        
+
         assertTrue(count >= 0, "数据库连接正常");
     }
 
