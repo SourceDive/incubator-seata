@@ -1,6 +1,8 @@
 package simple_seata_demo_01.config;
 
 import org.apache.seata.rm.datasource.DataSourceProxy;
+import org.apache.seata.spring.annotation.GlobalTransactionScanner;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import simple_seata_demo_01.service.AccountService;
 import org.springframework.context.annotation.Bean;
@@ -39,5 +41,11 @@ public class TestConfig {
     @Bean
     public AccountService accountService(JdbcTemplate jdbcTemplate) {
         return new AccountService(jdbcTemplate);
+    }
+
+    @Bean
+    @Primary
+    public GlobalTransactionScanner globalTransactionScanner() {
+        return new GlobalTransactionScanner("seata-test", "my_test_tx_group");
     }
 }
