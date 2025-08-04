@@ -1,0 +1,64 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: seata-server
+  main:
+    web-application-type: servlet
+    banner-mode: off
+
+seata:
+  server:
+    http:
+      filter:
+        xss:
+          enabled: true
+    enable-degrade: false
+    max-commit-retry-timeout: -1
+    max-rollback-retry-timeout: -1
+    rollback-retry-timeout-unlock-enable: false
+    enable-check-session-transaction-isolation: false
+    enable-parallel-request-handle: false
+    enable-rm-client-batch-request: true
+    enable-tm-client-batch-request: true
+    enable-tc-server-batch-send-response: true
+    rpc-rm-request-timeout: 30000
+    rpc-tm-request-timeout: 30000
+    rpc-tc-request-timeout: 30000
+    session:
+      enable-lock: true
+      lock:
+        retry-interval: 10
+        retry-times: 30
+        retry-policy-branch-rollback-on-conflict: true
+      async-request-size: 10000
+      lock-retry-interval: 10
+      lock-retry-times: 30
+      lock-retry-policy-branch-rollback-on-conflict: true
+    transaction:
+      undo:
+        log:
+          delete:
+            enable: true
+            save-days: 7
+            delete-rate: 20
+      lock:
+        retry-interval: 10
+        retry-times: 30
+        retry-policy-branch-rollback-on-conflict: true
+    service:
+      enable-degrade: false
+      disable-global-transaction: false
+    config:
+      type: file
+      file:
+        name: file.conf
+    registry:
+      type: file
+      file:
+        name: registry.conf
+
+logging:
+  level:
+    seata: debug
