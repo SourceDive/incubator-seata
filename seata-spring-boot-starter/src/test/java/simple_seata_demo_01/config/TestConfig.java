@@ -4,9 +4,9 @@ import org.apache.seata.rm.datasource.DataSourceProxy;
 import org.apache.seata.spring.annotation.GlobalTransactionScanner;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import simple_seata_demo_01.service.AccountService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -14,6 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
+@ComponentScan("simple_seata_demo_01.service") // 扫描service包
 public class TestConfig {
     @Bean
     public DataSource dataSource() {
@@ -36,11 +37,6 @@ public class TestConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
-    public AccountService accountService(JdbcTemplate jdbcTemplate) {
-        return new AccountService(jdbcTemplate);
     }
 
     @Bean

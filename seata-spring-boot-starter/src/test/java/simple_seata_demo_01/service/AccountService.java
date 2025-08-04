@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 
+@Service
 public class AccountService {
 
     private final JdbcTemplate jdbcTemplate;
