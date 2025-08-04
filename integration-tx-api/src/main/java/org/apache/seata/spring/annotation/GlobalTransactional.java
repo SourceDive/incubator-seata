@@ -28,6 +28,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>全局事务控制。</p>
+ * <p>说这个也是支持本地事务。</p>
  * The interface Global transactional.
  *
  * @see org.apache.seata.spring.annotation.GlobalTransactionScanner#wrapIfNecessary(Object, String, Object) org.apache.seata.spring

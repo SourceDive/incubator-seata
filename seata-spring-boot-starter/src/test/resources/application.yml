@@ -1,4 +1,4 @@
-# Seata 配置
+# Seata 配置 - 简化版本，适配源码环境
 seata:
   enabled: true
   application-id: seata-test
@@ -12,11 +12,12 @@ seata:
     type: file
   registry:
     type: file
+  data-source-proxy-mode: AT
 
 # H2 数据库配置
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
     username: sa
     password:
