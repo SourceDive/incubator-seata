@@ -1,4 +1,4 @@
-# Seata 配置 - 简化版本，适配源码环境
+# Seata 配置 - 使用MySQL数据库
 seata:
   enabled: true
   application-id: seata-test
@@ -14,10 +14,10 @@ seata:
     type: file
   data-source-proxy-mode: AT
 
-# H2 数据库配置
+# MySQL 数据库配置
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/seata_test_20250804?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: mysql123

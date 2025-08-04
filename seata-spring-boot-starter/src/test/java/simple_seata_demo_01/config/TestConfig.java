@@ -1,5 +1,6 @@
 package simple_seata_demo_01.config;
 
+import org.apache.seata.rm.datasource.DataSourceProxy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import simple_seata_demo_01.service.AccountService;
 import org.springframework.context.annotation.Bean;
@@ -14,17 +15,15 @@ import javax.sql.DataSource;
 public class TestConfig {
     @Bean
     public DataSource dataSource() {
-        // 配置H2内存数据库，但使用MySQL模式
+        // 配置MySQL数据库
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("org.h2.Driver");
-        // DB_CLOSE_DELAY=-1：保持内存数据库持久化
-        // MODE=MySQL：兼容 MySQL 语法，这是关键！
-        ds.setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE");
-        ds.setUsername("sa"); // 默认为sa
-        ds.setPassword("");   // 默认为空
+        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        ds.setUrl("jdbc:mysql://127.0.0.1:3306/seata_test_20250804?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true");
+        ds.setUsername("root");
+        ds.setPassword("mysql123");
         
-        // 直接返回普通DataSource，不使用DataSourceProxy
-        return ds;
+        // 使用DataSourceProxy包装，启用Seata AT模式
+        return new DataSourceProxy(ds, "mysql");
     }
 
     @Bean

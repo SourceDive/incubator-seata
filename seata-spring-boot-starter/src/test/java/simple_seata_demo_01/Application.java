@@ -36,24 +36,9 @@ class Application {
     // 每个测试前重建表结构
     @BeforeAll
     static void setup(@Autowired DataSource dataSource, @Autowired JdbcTemplate jdbcTemplate) throws SQLException {
-        // 初始化H2数据库表结构
-        jdbcTemplate.execute("CREATE TABLE if not exists account (id INT PRIMARY KEY, name VARCHAR(50), balance INT)");
-
-        // 必须创建 undo_log 表（AT模式核心）
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS undo_log (" +
-                "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
-                "branch_id BIGINT NOT NULL," +
-                "xid VARCHAR(100) NOT NULL," +
-                "context VARCHAR(128) NOT NULL," +
-                "rollback_info LONGBLOB NOT NULL," +
-                "log_status INT NOT NULL," +
-                "log_created DATETIME NOT NULL," +
-                "log_modified DATETIME NOT NULL," +
-                "UNIQUE KEY ux_undo_log (xid, branch_id)" +
-                ")");
-
-        jdbcTemplate.update("delete from account");
-        jdbcTemplate.execute("INSERT INTO account VALUES (1, 'UserA', 1000)"); // 01. 初始： A 1000元, B 1000元
+        // 清空账户数据并重新插入初始数据
+        jdbcTemplate.update("DELETE FROM account");
+        jdbcTemplate.execute("INSERT INTO account VALUES (1, 'UserA', 1000)"); // 初始： A 1000元, B 1000元
         jdbcTemplate.execute("INSERT INTO account VALUES (2, 'UserB', 1000)");
     }
 
@@ -92,12 +77,6 @@ class Application {
 
         assertEquals(1000, balanceA);
         assertEquals(1000, balanceB);
-    }
-
-
-    @PostConstruct
-    void startH2Console() throws SQLException {
-        org.h2.tools.Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
     }
 
     private int getBalance(int id) {
