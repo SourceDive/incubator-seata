@@ -17,7 +17,7 @@ docker run --name=seata-server \
     -v $(pwd)/seata-server-config/application.yml:/seata-server/resources/application.yml \
     -e SEATA_PORT=8091 \
     -e SEATA_HOST=0.0.0.0 \
-    apache/seata-server:latest
+    seataio/seata-server:1.7.1
 
 if [ $? -eq 0 ]; then
     echo "✅ Seata TC服务器已启动"

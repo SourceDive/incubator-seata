@@ -18,7 +18,7 @@ fi
 
 # 拉取官方Seata服务器镜像
 echo "正在拉取官方Seata服务器镜像..."
-docker pull apache/seata-server:latest
+docker pull apache/seata-server:1.7.1
 
 # 启动Seata TC服务器容器
 echo "正在启动Seata TC服务器容器..."
@@ -28,7 +28,7 @@ docker run --name=seata-server \
     -p 7091:7091 \
     -e SEATA_PORT=8091 \
     -e SEATA_HOST=0.0.0.0 \
-    apache/seata-server:latest
+    apache/seata-server:1.7.1
 
 if [ $? -eq 0 ]; then
     echo "✅ Seata TC服务器已成功启动在Docker容器中"
