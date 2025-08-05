@@ -19,6 +19,7 @@ package org.apache.seata.common;
 import java.time.Duration;
 
 /**
+ * <p>这里是application.yml里的配置项。</p>
  * The interface Default values.
  */
 public interface DefaultValues {
