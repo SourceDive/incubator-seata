@@ -44,4 +44,10 @@ public class TestConfig {
     public GlobalTransactionScanner globalTransactionScanner() {
         return new GlobalTransactionScanner("seata-test", "my_test_tx_group");
     }
+    
+    // 临时添加：手动创建的AccountService（用于对比）
+    @Bean("manualAccountService")
+    public simple_seata_demo_01.service.AccountService manualAccountService(JdbcTemplate jdbcTemplate) {
+        return new simple_seata_demo_01.service.AccountService(jdbcTemplate);
+    }
 }

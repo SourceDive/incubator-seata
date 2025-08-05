@@ -9,6 +9,7 @@ import org.apache.seata.rm.datasource.undo.mysql.MySQLUndoLogManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import simple_seata_demo_01.config.TestConfig;
@@ -31,6 +32,10 @@ class ApplicationTest {
     private AccountService accountService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    @Qualifier("manualAccountService") // 这个写法挺好的，不用去动到原有的程序的。
+    private AccountService manualAccountService;
 
     // 每个测试前重建表结构
     @BeforeAll
@@ -142,6 +147,39 @@ class ApplicationTest {
         // 3. 由于没有TC服务器，@GlobalTransactional不生效，所以数据被部分更新
         assertEquals(900, balanceAAfter); // A的余额减少了
         assertEquals(1000, balanceBAfter); // B的余额没有变化
+    }
+
+    /**
+     * 对比自动扫描和手动创建的bean
+     * 测试自动扫描的是代理类
+     * 手动创建的是普通类
+     */
+    @Test
+    void testBeanComparison() {
+        System.out.println("=== 对比自动扫描和手动创建的bean ===");
+        
+        // 获取自动扫描创建的AccountService（通过@ComponentScan）
+        System.out.println("自动扫描创建的AccountService:");
+        System.out.println("  类名: " + accountService.getClass().getName());
+        System.out.println("  是否为代理: " + accountService.getClass().getName().contains("$$"));
+        System.out.println("  是否为CGLIB代理: " + accountService.getClass().getName().contains("CGLIB"));
+        
+        // 获取手动创建的AccountService（通过@Bean方法）
+        System.out.println("\n手动创建的AccountService:");
+        System.out.println("  类名: " + manualAccountService.getClass().getName());
+        System.out.println("  是否为代理: " + manualAccountService.getClass().getName().contains("$$"));
+        System.out.println("  是否为CGLIB代理: " + manualAccountService.getClass().getName().contains("CGLIB"));
+        
+        // 测试手动创建的bean是否支持@GlobalTransactional
+        System.out.println("\n测试手动创建的bean的@GlobalTransactional:");
+        try {
+            manualAccountService.transferRollback(1, 2, 100);
+        } catch (RuntimeException e) {
+            System.out.println("  异常: " + e.getMessage());
+            // 检查XID
+            String xid = org.apache.seata.core.context.RootContext.getXID();
+            System.out.println("  XID: " + (xid != null ? xid : "null"));
+        }
     }
 
     /**
