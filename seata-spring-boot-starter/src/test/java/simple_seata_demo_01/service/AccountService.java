@@ -2,11 +2,8 @@ package simple_seata_demo_01.service;
 
 import org.apache.seata.core.context.RootContext;
 import org.apache.seata.spring.annotation.GlobalTransactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import javax.sql.DataSource;
 
 @Service
 public class AccountService {
