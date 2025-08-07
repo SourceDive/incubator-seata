@@ -155,7 +155,7 @@ class ApplicationTest {
      * 手动创建的是普通类
      */
     @Test
-    void testBeanComparison() {
+    void testAutowiredBeanAndFactoryMethodBean() {
         System.out.println("=== 对比自动扫描和手动创建的bean ===");
         
         // 获取自动扫描创建的AccountService（通过@ComponentScan）
@@ -274,13 +274,13 @@ class ApplicationTest {
         assertTrue(count >= 0, "数据库连接正常");
     }
 
-    private int getBalance(int id) {
-        return jdbcTemplate.queryForObject("SELECT balance FROM account WHERE id=?", Integer.class, id);
-    }
-
     @Test
     public void testUndoLogManager() {
         UndoLogManager undoLogManager = UndoLogManagerFactory.getUndoLogManager("mysql");
         assertEquals(MySQLUndoLogManager.class, undoLogManager.getClass());
+    }
+
+    private int getBalance(int id) {
+        return jdbcTemplate.queryForObject("SELECT balance FROM account WHERE id=?", Integer.class, id);
     }
 }
