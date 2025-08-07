@@ -105,6 +105,7 @@ public class RootContext {
     }
 
     /**
+     * <p>全局事务 ID。</p>
      * Gets xid.
      *
      * @return the xid
