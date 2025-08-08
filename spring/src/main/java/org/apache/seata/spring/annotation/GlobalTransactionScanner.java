@@ -319,12 +319,12 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
                     bean = super.wrapIfNecessary(bean, beanName, cacheKey);
                 } else {
                     AdvisedSupport advised = SpringProxyUtils.getAdvisedSupport(bean);
-                    Advisor[] advisor = buildAdvisors(beanName, getAdvicesAndAdvisorsForBean(null, null, null));
+                    Advisor[] advisors = buildAdvisors(beanName, getAdvicesAndAdvisorsForBean(null, null, null));
                     int pos;
-                    for (Advisor avr : advisor) {
+                    for (Advisor advisor : advisors) {
                         // Find the position based on the advisor's order, and add to advisors by pos
-                        pos = findAddSeataAdvisorPosition(advised, avr);
-                        advised.addAdvisor(pos, avr);
+                        pos = findAddSeataAdvisorPosition(advised, advisor);
+                        advised.addAdvisor(pos, advisor);
                     }
                 }
                 PROXYED_SET.add(beanName);
@@ -509,9 +509,11 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
             String[] beanNames = applicationContext.getBeanDefinitionNames();
             for (String contextBeanName : beanNames) {
                 BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(contextBeanName);
+                // 如果是工厂方法（例如@Bean）生产出来的bean，bean定义的beanClass和beanClassName都是为null.
                 if (StringUtils.isBlank(beanDefinition.getBeanClassName())) {
                     continue;
                 }
+                // 这个集合预设的有值，不需要另外更新。
                 if (IGNORE_ENHANCE_CHECK_SET.contains(beanDefinition.getBeanClassName())) {
                     continue;
                 }
@@ -522,6 +524,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
                     // get the class by bean definition class name
                     Class<?> beanClass = Class.forName(beanDefinition.getBeanClassName());
                     // check if it needs enhancement by the class
+                    // 解析的主要逻辑，下面是判断过滤的逻辑。
                     IfNeedEnhanceBean ifNeedEnhanceBean = DefaultInterfaceParser.get().parseIfNeedEnhancement(beanClass);
                     if (!ifNeedEnhanceBean.isIfNeed()) {
                         continue;
