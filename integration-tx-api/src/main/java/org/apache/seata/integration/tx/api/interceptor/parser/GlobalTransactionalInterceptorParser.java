@@ -75,6 +75,7 @@ public class GlobalTransactionalInterceptorParser implements InterfaceParser {
         return ifNeedEnhanceBean;
     }
 
+    // 检查类或方法上是否存在注解 @GlobalTransactional
     protected boolean existsAnnotation(Class<?>... classes) {
         boolean result = false;
         if (CollectionUtils.isNotEmpty(classes)) {
