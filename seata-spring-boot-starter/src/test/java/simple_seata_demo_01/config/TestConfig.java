@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan("simple_seata_demo_01.service") // 扫描service包
 public class TestConfig {
+    // 必须要有的基础设施
     @Bean
     public DataSource dataSource() {
         // 配置MySQL数据库
@@ -29,16 +30,19 @@ public class TestConfig {
         return new DataSourceProxy(ds, "mysql");
     }
 
+    // 必须要有的基础设施
     @Bean
     public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
+    // 必须要有的基础设施
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 
+    // 必须要有的基础设施
     @Bean
     @Primary
     public GlobalTransactionScanner globalTransactionScanner() {

@@ -39,6 +39,7 @@ import static org.apache.seata.common.Constants.BEAN_NAME_SPRING_APPLICATION_CON
 import static org.apache.seata.spring.boot.autoconfigure.StarterConstants.SEATA_PREFIX;
 
 /**
+ * <p>seata 自动配置类。</p>
  * The type Seata auto configuration
  *
  */

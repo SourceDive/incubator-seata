@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import static org.apache.seata.common.DefaultValues.DEFAULT_TRANSACTION_UNDO_LOG_TABLE;
 
 /**
+ * <p>数据源代理。</p>
  * The type Data source proxy.
  *
  */
@@ -125,6 +126,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
         DefaultResourceManager.get().registerResource(this);
         TableMetaCacheFactory.registerTableMeta(this);
         //Set the default branch type to 'AT' in the RootContext.
+        // 默认事物模式为 AT
         RootContext.setDefaultBranchType(this.getBranchType());
     }
 

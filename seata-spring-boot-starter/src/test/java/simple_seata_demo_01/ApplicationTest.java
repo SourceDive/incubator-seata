@@ -32,12 +32,14 @@ class ApplicationTest {
 
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     @Qualifier("manualAccountService") // 这个写法挺好的，不用去动到原有的程序的。
     private AccountService manualAccountService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
 
     // 每个测试前重建表结构
     @BeforeAll
@@ -162,19 +164,19 @@ class ApplicationTest {
     @DisplayName("对比自动扫描和手动创建的bean")
     void testAutowiredBeanAndFactoryMethodBean() {
         System.out.println("=== 对比自动扫描和手动创建的bean ===");
-        
+
         // 获取自动扫描创建的AccountService（通过@ComponentScan）
         System.out.println("自动扫描创建的AccountService:");
         System.out.println("  类名: " + accountService.getClass().getName());
         System.out.println("  是否为代理: " + accountService.getClass().getName().contains("$$"));
         System.out.println("  是否为CGLIB代理: " + accountService.getClass().getName().contains("CGLIB"));
-        
+
         // 获取手动创建的AccountService（通过@Bean方法）
         System.out.println("\n手动创建的AccountService:");
         System.out.println("  类名: " + manualAccountService.getClass().getName());
         System.out.println("  是否为代理: " + manualAccountService.getClass().getName().contains("$$"));
         System.out.println("  是否为CGLIB代理: " + manualAccountService.getClass().getName().contains("CGLIB"));
-        
+
         // 测试手动创建的bean是否支持@GlobalTransactional
         System.out.println("\n测试手动创建的bean的@GlobalTransactional:");
         try {
