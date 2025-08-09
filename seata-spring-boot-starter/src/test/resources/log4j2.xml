@@ -6,13 +6,23 @@
         </Console>
     </Appenders>
     <Loggers>
-        <!-- Seata 日志级别 -->
-        <Logger name="io.seata" level="debug" additivity="false">
+        <!-- Seata 日志级别 - 使用正确的包名 -->
+        <Logger name="org.apache.seata" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        
+        <!-- Fury 日志级别 - 抑制警告 -->
+        <Logger name="org.apache.fury" level="error" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 
         <!-- Spring 日志级别 -->
         <Logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        
+        <!-- 测试包日志级别 -->
+        <Logger name="simple_seata_demo_01" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 
