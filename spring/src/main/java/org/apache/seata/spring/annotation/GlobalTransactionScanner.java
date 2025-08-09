@@ -509,7 +509,10 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
             String[] beanNames = applicationContext.getBeanDefinitionNames();
             for (String contextBeanName : beanNames) {
                 BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(contextBeanName);
-                // 如果是工厂方法（例如@Bean）生产出来的bean，bean定义的beanClass和beanClassName都是为null.
+                // 如果是工厂方法（例如@Bean）生产出来的bean，bean定义的beanClass和beanClassName
+                // 都是为null. 这种 bean 定义只会设置工厂bean、工厂方法的信息。
+                // 过滤掉没有明确类名的 bean 定义。
+                // 防范空指针，可以把这个检查去掉，后面会报空指针.
                 if (StringUtils.isBlank(beanDefinition.getBeanClassName())) {
                     continue;
                 }
