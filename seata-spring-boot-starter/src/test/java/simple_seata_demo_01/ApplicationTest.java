@@ -7,6 +7,7 @@ import org.apache.seata.rm.datasource.undo.UndoLogManager;
 import org.apache.seata.rm.datasource.undo.UndoLogManagerFactory;
 import org.apache.seata.rm.datasource.undo.mysql.MySQLUndoLogManager;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 快速验证 Seata 的基本工作原理
  * 25.08.01 Fri
  */
+@DisplayName("第一个 seata demo")
 @SpringBootTest(classes = {TestConfig.class}) // 告诉 spring 加载 AccountService
 class ApplicationTest {
 
@@ -64,6 +66,7 @@ class ApplicationTest {
 
     // OK
     @Test
+    @DisplayName("测试提交")
     void testCommit() {
         // A 给 B 转100元
         accountService.transferMoneyCommit(1, 2, 100);
@@ -83,6 +86,7 @@ class ApplicationTest {
      * 现在有TC服务器，@GlobalTransactional应该生效
      */
     @Test
+    @DisplayName("测试回滚")
     void testRollback() {
         // 转账前记录余额
         int balanceA = getBalance(1);
@@ -155,6 +159,7 @@ class ApplicationTest {
      * 手动创建的是普通类
      */
     @Test
+    @DisplayName("对比自动扫描和手动创建的bean")
     void testAutowiredBeanAndFactoryMethodBean() {
         System.out.println("=== 对比自动扫描和手动创建的bean ===");
         
@@ -182,10 +187,8 @@ class ApplicationTest {
         }
     }
 
-    /**
-     * 测试Seata客户端是否正确初始化
-     */
     @Test
+    @DisplayName("测试Seata客户端是否正确初始化")
     void testSeataClientInit() {
         System.out.println("=== 测试Seata客户端初始化 ===");
 
@@ -212,10 +215,8 @@ class ApplicationTest {
         }
     }
 
-    /**
-     * 测试全局事务是否正确启动
-     */
     @Test
+    @DisplayName("测试全局事务是否正确启动")
     void testGlobalTransaction() {
         System.out.println("=== 测试全局事务启动 ===");
 
@@ -255,10 +256,8 @@ class ApplicationTest {
         System.out.println("最终XID: " + (finalXid != null ? finalXid : "null"));
     }
 
-    /**
-     * 清理数据库锁的测试方法
-     */
     @Test
+    @DisplayName("清理数据库锁的测试方法")
     void testCleanup() {
         System.out.println("清理测试 - 验证数据库连接正常");
 
@@ -275,6 +274,7 @@ class ApplicationTest {
     }
 
     @Test
+    @DisplayName("测试UndoLogManager的类型是否是 mysql")
     public void testUndoLogManager() {
         UndoLogManager undoLogManager = UndoLogManagerFactory.getUndoLogManager("mysql");
         assertEquals(MySQLUndoLogManager.class, undoLogManager.getClass());
