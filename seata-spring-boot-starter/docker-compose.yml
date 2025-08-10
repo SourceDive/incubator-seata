@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库服务
+  mysql:
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/mysql:8.0.39-linuxarm64
+    container_name: seata-mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql123
+      MYSQL_DATABASE: seata_test_20250804
+      MYSQL_PASSWORD: mysql123
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      # 数据持久化
+      - mysql_data:/var/lib/mysql
+      - mysql_config:/etc/mysql/conf.d
+      # 初始化脚本
+      - ./src/test/resources/init_mysql.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - seata-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pmysql123"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+
+  # Seata 事务协调器服务
+  seata-server:
+    image: seataio/seata-server:1.7.1
+    container_name: seata-server-20250810
+    restart: always
+    ports:
+      - "8091:8091"  # Seata 服务端口
+      - "7091:7091"  # Seata 控制台端口
+    environment:
+      # 基础配置
+      SEATA_PORT: 8091
+      # 存储模式：file、db、redis
+      STORE_MODE: file
+      # 会话存储模式
+      SESSION_STORE_MODE: file
+      # 锁存储模式  
+      LOCK_STORE_MODE: file
+      # 全局事务会话信息存储模式
+      GLOBAL_STORE_MODE: file
+      # 序列化方式
+      SEATA_CONFIG_NAME: file.conf
+      SEATA_REGISTRY_TYPE: file
+    volumes:
+      # Seata 配置文件
+      - ./seata-server-config:/seata-server/resources
+      # Seata 数据持久化
+      - seata_data:/seata-server/sessionStore
+      - seata_logs:/opt/seata-server/logs
+    networks:
+      - seata-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "sh", "-c", "netstat -ltn | grep 8091"]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+
+# 网络配置
+networks:
+  seata-network:
+    driver: bridge
+    name: seata-network
+
+# 数据卷配置
+volumes:
+  mysql_data:
+    name: seata_mysql_data
+    driver: local
+  mysql_config:
+    name: seata_mysql_config  
+    driver: local
+  seata_data:
+    name: seata_server_data
+    driver: local
+  seata_logs:
+    name: seata_server_logs
+    driver: local
+
