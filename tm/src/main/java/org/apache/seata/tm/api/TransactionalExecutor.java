@@ -25,6 +25,7 @@ import org.apache.seata.tm.api.transaction.TransactionInfo;
 public interface TransactionalExecutor {
 
     /**
+     * <p>给业务逻辑实现留的。</p>
      * Execute the business logic here.
      *
      * @return What the business logic returns.

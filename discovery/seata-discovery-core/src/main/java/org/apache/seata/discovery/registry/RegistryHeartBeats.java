@@ -93,6 +93,7 @@ public class RegistryHeartBeats {
                 DEFAULT_HEARTBEAT_ENABLED);
     }
 
+    // 函数式接口
     @FunctionalInterface
     public interface ReRegister {
 

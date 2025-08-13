@@ -48,7 +48,7 @@ public class TransactionalTemplate {
     /**
      * Execute object.
      *
-     * @param business the business
+     * @param business the business 业务逻辑
      * @return the object
      * @throws TransactionalExecutor.ExecutionException the execution exception
      */
@@ -315,6 +315,8 @@ public class TransactionalTemplate {
 
         }
     }
+
+    /// //////// 下面都是 hook 的触发。
 
     private void triggerBeforeBegin() {
         for (TransactionHook hook : getCurrentHooks()) {

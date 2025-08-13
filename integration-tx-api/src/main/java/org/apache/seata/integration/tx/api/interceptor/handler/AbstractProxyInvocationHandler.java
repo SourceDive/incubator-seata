@@ -26,6 +26,7 @@ import org.apache.seata.integration.tx.api.interceptor.NestInterceptorHandlerWra
 
 public abstract class AbstractProxyInvocationHandler implements ProxyInvocationHandler {
 
+    // 一个模板方法，子类实现
     protected abstract Object doInvoke(InvocationWrapper invocation) throws Throwable;
 
     protected int order = Integer.MAX_VALUE;

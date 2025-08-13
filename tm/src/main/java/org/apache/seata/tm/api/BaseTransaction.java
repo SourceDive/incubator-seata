@@ -16,5 +16,8 @@
  */
 package org.apache.seata.tm.api;
 
+/**
+ * 一个标记接口。
+ */
 public interface BaseTransaction {
 }

@@ -17,6 +17,18 @@
 package org.apache.seata.tm.api.transaction;
 
 
+/**
+ * 三个结点：
+ * <ul>
+ * 1、begin
+ * </ul>
+ * <ul>
+ * 2、commit
+ * </ul>
+ * <ul>
+ * 3、rollback
+ * </ul>
+ */
 public interface TransactionHook {
 
     /**
