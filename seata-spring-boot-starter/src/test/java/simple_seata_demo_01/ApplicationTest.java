@@ -6,6 +6,7 @@ import org.apache.seata.core.context.RootContext;
 import org.apache.seata.rm.datasource.undo.UndoLogManager;
 import org.apache.seata.rm.datasource.undo.UndoLogManagerFactory;
 import org.apache.seata.rm.datasource.undo.mysql.MySQLUndoLogManager;
+import org.apache.seata.spring.annotation.GlobalTransactionScanner;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -159,6 +160,11 @@ class ApplicationTest {
      * 对比自动扫描和手动创建的bean
      * 测试自动扫描的是代理类
      * 手动创建的是普通类
+     *
+     * <p>
+     * 原因：手动创建的bean定义的beanclassname为null，这种被seata发现的话，不会被增强
+     * </p>
+     * @see GlobalTransactionScanner#findBusinessBeanNamesNeededEnhancement()
      */
     @Test
     @DisplayName("对比自动扫描和手动创建的bean")

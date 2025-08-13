@@ -68,6 +68,8 @@ public class GlobalTransactionalInterceptorParser implements InterfaceParser {
         Class<?>[] interfaceClasseArray = interfaceClasses.toArray(new Class<?>[0]);
 
         IfNeedEnhanceBean ifNeedEnhanceBean = new IfNeedEnhanceBean();
+        // 1、目标类上有注解
+        // 2、目标类声明的方法上有注解
         if (existsAnnotation(beanClass) || existsAnnotation(interfaceClasseArray)) {
             ifNeedEnhanceBean.setIfNeed(true);
             ifNeedEnhanceBean.setNeedEnhanceEnum(NeedEnhanceEnum.GLOBAL_TRANSACTIONAL_BEAN);
