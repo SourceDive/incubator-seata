@@ -25,7 +25,26 @@ fi
 echo -e "${YELLOW}📦 拉取最新镜像...${NC}"
 docker-compose pull
 
-echo -e "${YELLOW}🏗️  构建并启动服务...${NC}"
+# 检查是否已有容器在运行
+echo -e "${YELLOW}🔍 检查现有容器状态...${NC}"
+
+# 检查 MySQL 容器
+if docker ps -q -f name=seata-mysql | grep -q .; then
+    echo -e "${GREEN}✅ 发现 MySQL 容器已存在，尝试启动...${NC}"
+    docker start seata-mysql 2>/dev/null || echo -e "${YELLOW}⚠️  MySQL 容器已在运行${NC}"
+else
+    echo -e "${BLUE}📦 MySQL 容器不存在，将创建新容器${NC}"
+fi
+
+# 检查 Seata 容器
+if docker ps -q -f name=seata-server-20250810 | grep -q .; then
+    echo -e "${GREEN}✅ 发现 Seata 容器已存在，尝试启动...${NC}"
+    docker start seata-server-20250810 2>/dev/null || echo -e "${YELLOW}⚠️  Seata 容器已在运行${NC}"
+else
+    echo -e "${BLUE}📦 Seata 容器不存在，将创建新容器${NC}"
+fi
+
+echo -e "${YELLOW}🏗️  启动服务...${NC}"
 docker-compose up -d
 
 # 等待服务启动
@@ -85,4 +104,5 @@ echo "  查看状态: docker-compose ps"
 echo ""
 
 echo -e "${GREEN}✨ 现在可以运行测试了！${NC}"
+
 

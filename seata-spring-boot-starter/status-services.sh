@@ -52,3 +52,4 @@ else
     echo -e "${RED}❌ Seata Server 运行异常${NC}"
 fi
 
+
