@@ -28,6 +28,10 @@ import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 
 
+/**
+ * 转换接口。
+ * 拦截器适配器: 将 aop 的 interceptor 转换为 seata 的 interceptor.
+ */
 public class AdapterSpringSeataInterceptor implements MethodInterceptor, SeataInterceptor, Ordered {
 
     private ProxyInvocationHandler proxyInvocationHandler;

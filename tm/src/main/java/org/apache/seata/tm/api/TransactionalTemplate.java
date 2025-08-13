@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <p>处理全局事务的模板类。</p>
  * Template of executing business logic with a global transaction.
  *
  */

@@ -17,6 +17,7 @@
 package org.apache.seata.core.model;
 
 /**
+ * <p>被资源管理器管理的资源。</p>
  * Resource that can be managed by Resource Manager and involved into global transaction.
  *
  */

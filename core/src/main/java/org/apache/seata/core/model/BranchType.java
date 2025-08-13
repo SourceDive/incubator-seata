@@ -17,6 +17,7 @@
 package org.apache.seata.core.model;
 
 /**
+ * <p>分支事务类型。</p>
  * The enum Branch type.
  *
  */

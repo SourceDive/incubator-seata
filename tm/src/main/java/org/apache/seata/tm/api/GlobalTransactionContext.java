@@ -52,6 +52,7 @@ public class GlobalTransactionContext {
     }
 
     /**
+     * <p>获取绑定到当前线程的全局事务实例，没有则新建。</p>
      * Get GlobalTransaction instance bind on current thread. Create a new on if no existing there.
      *
      * @return new context if no existing there.

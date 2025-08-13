@@ -34,6 +34,8 @@ public abstract class AbstractProxyInvocationHandler implements ProxyInvocationH
 
     @Override
     public Object invoke(InvocationWrapper invocation) throws Throwable {
+        // 1、检查目标方法集合非空
+        // 2、检查给定的触发方法存在于集合中
         if (CollectionUtils.isNotEmpty(getMethodsToProxy()) && !getMethodsToProxy().contains(invocation.getMethod().getName())) {
             return invocation.proceed();
         }

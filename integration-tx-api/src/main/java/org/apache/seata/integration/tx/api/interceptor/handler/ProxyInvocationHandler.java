@@ -25,6 +25,7 @@ import org.apache.seata.integration.tx.api.interceptor.SeataInterceptorPosition;
 
 public interface ProxyInvocationHandler extends SeataInterceptor {
 
+    // 存放被代理的目标方法
     Set<String> getMethodsToProxy();
 
     Object invoke(InvocationWrapper invocation) throws Throwable;
