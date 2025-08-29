@@ -19,6 +19,7 @@ package org.apache.seata.tm.api.transaction;
 import javax.annotation.Nonnull;
 
 /**
+ * <p>挂起资源的 holder.</p>
  * Holder for suspended resources to support propagation or nested logic.
  * Used by {@code suspend} and {@code resume}
  *
@@ -30,6 +31,7 @@ public class SuspendedResourcesHolder {
      */
     private String xid;
 
+    // todo 为什么这里挂起的资源用 xid 表示？
     public SuspendedResourcesHolder(String xid) {
         if (xid == null) {
             throw new IllegalArgumentException("xid must be not null");

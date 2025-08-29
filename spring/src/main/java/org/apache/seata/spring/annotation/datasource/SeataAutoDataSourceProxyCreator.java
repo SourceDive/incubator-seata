@@ -75,6 +75,7 @@ public class SeataAutoDataSourceProxyCreator extends AbstractAutoProxyCreator {
             return bean;
         }
 
+        // 1、bean 不是 SeataDataSourceProxy
         // when this bean is just a simple DataSource, not SeataDataSourceProxy
         if (!(bean instanceof SeataDataSourceProxy)) {
             Object enhancer = super.wrapIfNecessary(bean, beanName, cacheKey);
@@ -84,12 +85,14 @@ public class SeataAutoDataSourceProxyCreator extends AbstractAutoProxyCreator {
             }
             // else, build proxy,  put <origin, proxy> to holder and return enhancer
             DataSource origin = (DataSource) bean;
+            // 生成 seata 专有的数据源代理。
             SeataDataSourceProxy proxy = buildProxy(origin, dataSourceProxyMode);
             DataSourceProxyHolder.put(origin, proxy);
             LOGGER.info("Auto proxy data source '{}' by '{}' mode.", beanName, dataSourceProxyMode);
             return enhancer;
         }
 
+        // 2、bean 是 SeataDataSourceProxy
         /*
          * things get dangerous when you try to register SeataDataSourceProxy bean by yourself!
          * if you insist on doing so, you must make sure your method return type is DataSource,

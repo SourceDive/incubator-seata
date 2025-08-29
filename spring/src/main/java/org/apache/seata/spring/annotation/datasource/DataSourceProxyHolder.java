@@ -28,6 +28,7 @@ import org.apache.seata.rm.datasource.SeataDataSourceProxy;
  */
 public class DataSourceProxyHolder {
 
+    // origin -> proxy
     private static final Map<DataSource, SeataDataSourceProxy> PROXY_MAP = new HashMap<>(4);
 
     static SeataDataSourceProxy put(DataSource origin, SeataDataSourceProxy proxy) {

@@ -20,6 +20,9 @@ import java.lang.reflect.Method;
 import org.apache.seata.integration.tx.api.interceptor.handler.ProxyInvocationHandler;
 
 
+/**
+ * 一个包装类。
+ */
 public class NestInterceptorHandlerWrapper implements InvocationWrapper {
 
     private ProxyInvocationHandler proxyInvocationHandler;

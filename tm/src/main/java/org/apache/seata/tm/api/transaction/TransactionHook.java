@@ -18,6 +18,7 @@ package org.apache.seata.tm.api.transaction;
 
 
 /**
+ * <p>生命周期钩子。</p>
  * 三个结点：
  * <ul>
  * 1、begin

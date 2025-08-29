@@ -99,6 +99,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
             targetDataSource = ((SeataDataSourceProxy) targetDataSource).getTargetDataSource();
         }
         this.targetDataSource = targetDataSource;
+        // 初始化数据源。
         init(targetDataSource, resourceGroupId);
     }
 

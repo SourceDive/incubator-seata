@@ -22,7 +22,11 @@ import org.apache.seata.tm.api.transaction.SuspendedResourcesHolder;
 
 /**
  * Global transaction.
- *
+ * <ul>1、begin()</ul>
+ * <ul>2、commit()</ul>
+ * <ul>3、rollback()</ul>
+ * <ul>4、suspend()</ul>
+ * <ul>5、resume()</ul>
  */
 public interface GlobalTransaction extends BaseTransaction {
 

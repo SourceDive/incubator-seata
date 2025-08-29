@@ -23,6 +23,14 @@ import org.apache.seata.common.LockStrategyMode;
 import org.apache.seata.common.util.CollectionUtils;
 
 
+/**
+ * tx info
+ * <ul>1、超时时间</ul>
+ * <ul>2、名称</ul>
+ * <ul>3、传播行为</ul>
+ * <ul>4、回滚规则</ul>
+ * <ul>5、锁策略：乐观、悲观</ul>
+ */
 public final class TransactionInfo implements Serializable {
 
     private int timeOut;

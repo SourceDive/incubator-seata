@@ -27,6 +27,7 @@ import org.apache.seata.tm.api.TransactionalExecutor;
  */
 public enum Propagation {
     /**
+     * <p>默认的传播行为。</p>
      * The REQUIRED.
      * The default propagation.
      *
