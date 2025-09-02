@@ -19,6 +19,9 @@ package org.apache.seata.core.model;
 import org.apache.seata.common.LockStrategyMode;
 
 
+/**
+ * 全局锁配置domain: 重试间隔、重试次数、锁策略
+ */
 public class GlobalLockConfig {
 
     private int lockRetryInterval;

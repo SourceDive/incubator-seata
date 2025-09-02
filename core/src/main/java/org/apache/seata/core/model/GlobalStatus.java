@@ -17,6 +17,7 @@
 package org.apache.seata.core.model;
 
 /**
+ * <p>全局事务状态。</p>
  * Status of global transaction.
  *
  */

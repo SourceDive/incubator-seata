@@ -38,6 +38,7 @@ public abstract class AbstractProxyInvocationHandler implements ProxyInvocationH
         // 1、检查目标方法集合非空
         // 2、检查给定的触发方法存在于集合中
         if (CollectionUtils.isNotEmpty(getMethodsToProxy()) && !getMethodsToProxy().contains(invocation.getMethod().getName())) {
+            // 方法未被代理，直接访问原方法。
             return invocation.proceed();
         }
         if (nextInvocationHandlerChain != null) {

@@ -22,6 +22,9 @@ import org.apache.seata.integration.tx.api.interceptor.InvocationWrapper;
 import org.aopalliance.intercept.MethodInvocation;
 
 
+/**
+ * 一个包装类：封装 aop 联盟的 MethodInvocation
+ */
 public class AdapterInvocationWrapper implements InvocationWrapper {
 
     private MethodInvocation invocation;

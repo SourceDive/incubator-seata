@@ -20,6 +20,7 @@ package org.apache.seata.core.model;
 import org.apache.seata.common.exception.ShouldNeverHappenException;
 
 /**
+ * <p>分支事务状态。</p>
  * Status of branch transaction.
  *
  */

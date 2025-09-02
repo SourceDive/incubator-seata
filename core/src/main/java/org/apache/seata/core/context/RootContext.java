@@ -43,6 +43,9 @@ public class RootContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RootContext.class);
 
+    // 有些常量是TX开头，例如TX_XID，有的是X开头，例如X-TX-XID，为什么要这样？
+    // TX 表示内部管理， X 用于外部网络通信
+
     /**
      * The constant KEY_XID.
      */
@@ -60,6 +63,8 @@ public class RootContext {
      */
     public static final String KEY_TIMEOUT = "TX_TIMEOUT";
 
+    // 下面这些 MDC 是和日志有关的。先不管。
+    // 是一个与线程绑定的、用于存储诊断信息的键值对容器。
     /**
      * The constant MDC_KEY_XID for logback
      * @since 1.5.0
@@ -116,6 +121,7 @@ public class RootContext {
     }
 
     /**
+     * <p>绑定 xid 到当前线程。</p>
      * Bind xid.
      *
      * @param xid the xid
@@ -156,6 +162,7 @@ public class RootContext {
     }
 
     /**
+     * <p>解绑当前线程的 xid.</p>
      * Unbind xid.
      *
      * @return the previous xid or null
@@ -207,6 +214,7 @@ public class RootContext {
     }
 
     /**
+     * <p>获取当前线程的 branch type.</p>
      * get the branch type
      *
      * @return the branch type String
@@ -225,6 +233,7 @@ public class RootContext {
     }
 
     /**
+     * <p>绑定分支事务类型到当前线程。</p>
      * bind branch type
      *
      * @param branchType the branch type
@@ -241,6 +250,7 @@ public class RootContext {
     }
 
     /**
+     * <p>从当前线程解绑分支事务类型。</p>
      * unbind branch type
      *
      * @return the previous branch type or null
@@ -255,6 +265,7 @@ public class RootContext {
     }
 
     /**
+     * <p>检查全局锁是否存在。</p>
      * requires global lock check
      *
      * @return the boolean

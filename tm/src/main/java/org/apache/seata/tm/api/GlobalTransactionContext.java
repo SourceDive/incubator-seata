@@ -21,6 +21,7 @@ import org.apache.seata.core.exception.TransactionException;
 import org.apache.seata.core.model.GlobalStatus;
 
 /**
+ * <p>这个类是对于调用层的一个门户或者说是入口。</p>
  * GlobalTransaction API
  *
  */
@@ -30,6 +31,7 @@ public class GlobalTransactionContext {
     }
 
     /**
+     * <p>创建一个全局事务。</p>
      * Try to create a new GlobalTransaction.
      *
      * @return the new global transaction
@@ -53,7 +55,7 @@ public class GlobalTransactionContext {
     }
 
     /**
-     * <p>获取绑定到当前线程的全局事务实例，没有则新建。</p>
+     * <p>获取绑定到当前线程的全局事务实例。不存在则新建。</p>
      * Get GlobalTransaction instance bind on current thread. Create a new on if no existing there.
      *
      * @return new context if no existing there.
