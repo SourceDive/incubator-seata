@@ -44,6 +44,8 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
 
     private TransactionManager transactionManager;
 
+    // 分布式系统的寻址标识。
+    // 构成：IP地址 + 端口 + 时间戳 + 序列号
     private String xid;
 
     private GlobalStatus status;
@@ -161,6 +163,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
     @SuppressWarnings("lgtm[java/constant-comparison]")
     @Override
     public void rollback() throws TransactionException {
+        // 回滚动作也必须由 Launcher 来发起。
         if (role == GlobalTransactionRole.Participant) {
             // Participant has no responsibility of rollback
             if (LOGGER.isDebugEnabled()) {

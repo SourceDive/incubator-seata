@@ -27,6 +27,7 @@ import org.apache.seata.core.rpc.processor.RemotingProcessor;
 import org.apache.seata.core.protocol.MessageType;
 
 /**
+ * <p>远程调用的客户端。</p>
  * The interface remoting client.
  *
  * @since 1.3.0

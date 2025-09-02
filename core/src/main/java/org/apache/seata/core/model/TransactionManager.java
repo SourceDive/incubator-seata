@@ -32,6 +32,7 @@ import org.apache.seata.core.exception.TransactionException;
 public interface TransactionManager {
 
     /**
+     * <p>得到 xid。</p>
      * Begin a new global transaction.
      *
      * @param applicationId           ID of the application who begins this transaction.

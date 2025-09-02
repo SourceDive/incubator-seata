@@ -72,6 +72,7 @@ public class DefaultTransactionManager implements TransactionManager {
     public GlobalStatus rollback(String xid) throws TransactionException {
         GlobalRollbackRequest globalRollback = new GlobalRollbackRequest();
         globalRollback.setXid(xid);
+        // seata-server 进行回滚。
         GlobalRollbackResponse response = (GlobalRollbackResponse) syncCall(globalRollback);
         return response.getGlobalStatus();
     }

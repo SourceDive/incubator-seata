@@ -211,6 +211,7 @@ public interface DefaultValues {
      */
     int DEFAULT_TM_ROLLBACK_RETRY_COUNT = 5;
     /**
+     * <p>默认全局事务超时时间：1分钟</p>
      * The constant DEFAULT_GLOBAL_TRANSACTION_TIMEOUT.
      */
     int DEFAULT_GLOBAL_TRANSACTION_TIMEOUT = 60000;

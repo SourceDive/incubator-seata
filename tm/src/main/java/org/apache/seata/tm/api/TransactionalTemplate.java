@@ -206,6 +206,7 @@ public class TransactionalTemplate {
 
     private void commitTransaction(GlobalTransaction tx, TransactionInfo txInfo)
             throws TransactionalExecutor.ExecutionException, TransactionException {
+        // 必须由 launcher 来发起提交。
         if (tx.getGlobalTransactionRole() != GlobalTransactionRole.Launcher) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Ignore commit: just involved in global transaction [{}]", tx.getXid());
