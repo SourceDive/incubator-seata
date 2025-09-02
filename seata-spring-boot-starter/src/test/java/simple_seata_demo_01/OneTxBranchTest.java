@@ -26,10 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 快速验证 Seata 的基本工作原理
  * 25.08.01 Fri
+ *
+ * 只存在一个分支事务的测试，这个测试程序不太合理。
  */
 @DisplayName("第一个 seata demo")
 @SpringBootTest(classes = {TestConfig.class}) // 告诉 spring 加载 AccountService
-class ApplicationTest {
+class OneTxBranchTest {
 
     @Autowired
     private AccountService accountService;
