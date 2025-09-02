@@ -106,12 +106,14 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
         }
         assertXIDNull();
         String currentXid = RootContext.getXID();
+        // 开启全局事务时，xid 必须为 null
         if (currentXid != null) {
             throw new IllegalStateException("Global transaction already exists," +
                 " can't begin a new global transaction, currentXid = " + currentXid);
         }
         xid = transactionManager.begin(null, null, name, timeout);
         status = GlobalStatus.Begin;
+        // 绑定xid到当前线程
         RootContext.bind(xid);
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Begin new global transaction [{}]", xid);

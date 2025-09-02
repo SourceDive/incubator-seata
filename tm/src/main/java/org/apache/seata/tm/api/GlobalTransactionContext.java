@@ -39,6 +39,7 @@ public class GlobalTransactionContext {
     }
 
     /**
+     * <p>获取当前线程的全局事务实例。</p>
      * Get GlobalTransaction instance bind on current thread.
      *
      * @return null if no transaction context there.

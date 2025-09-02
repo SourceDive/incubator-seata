@@ -19,7 +19,11 @@ package org.apache.seata.core.model;
 import org.apache.seata.core.exception.TransactionException;
 
 /**
- * <p>事务管理器：发起、提交、回滚。</p>
+ * <p>事务管理器：发起、提交、回滚。
+ * <ul>begin()</ul>
+ * <ul>commit()</ul>
+ * <ul>rollback()</ul>
+ * </p>
  * Transaction Manager.
  *
  * Define a global transaction and control it.

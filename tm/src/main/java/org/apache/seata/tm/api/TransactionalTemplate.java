@@ -58,9 +58,11 @@ public class TransactionalTemplate {
         if (txInfo == null) {
             throw new ShouldNeverHappenException("transactionInfo does not exist");
         }
+        // 获取当前事务
         // 1.1 Get current transaction, if not null, the tx role is 'GlobalTransactionRole.Participant'.
         GlobalTransaction tx = GlobalTransactionContext.getCurrent();
 
+        // 处理传播行为
         // 1.2 Handle the transaction propagation.
         Propagation propagation = txInfo.getPropagation();
         SuspendedResourcesHolder suspendedResourcesHolder = null;
@@ -113,6 +115,7 @@ public class TransactionalTemplate {
                     throw new TransactionException("Not Supported Propagation:" + propagation);
             }
 
+            // 绑定当前 tx info 到线程上
             // set current tx config to holder
             GlobalLockConfig previousConfig = replaceGlobalLockConfig(txInfo);
             

@@ -50,10 +50,13 @@ public class DefaultTransactionManager implements TransactionManager {
         GlobalBeginRequest request = new GlobalBeginRequest();
         request.setTransactionName(name);
         request.setTimeout(timeout);
+        // 向 seata-server 发送请求
         GlobalBeginResponse response = (GlobalBeginResponse) syncCall(request);
         if (response.getResultCode() == ResultCode.Failed) {
             throw new TmTransactionException(TransactionExceptionCode.BeginFailed, response.getMsg());
         }
+        // 返回响应中的 xid
+        // 示例：172.17.0.2:8091:18703939069415426
         return response.getXid();
     }
 
