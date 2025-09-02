@@ -75,7 +75,7 @@ class TwoTxBranchTest {
         int initialBalance = getAccountBalance(1);
         int initialStock = getInventoryStock(1);
 
-        System.out.println("初始状态 - 用户1余额: " + initialBalance + ", 产品1库存: " + initialStock);
+        System.out.println("===>初始状态 - 用户1余额: " + initialBalance + ", 产品1库存: " + initialStock);
 
         // 执行分布式事务：创建订单
         // 1. 从用户1账户扣款100元
@@ -86,7 +86,7 @@ class TwoTxBranchTest {
         int finalBalance = getAccountBalance(1);
         int finalStock = getInventoryStock(1);
 
-        System.out.println("最终状态 - 用户1余额: " + finalBalance + ", 产品1库存: " + finalStock);
+        System.out.println("===>最终状态 - 用户1余额: " + finalBalance + ", 产品1库存: " + finalStock);
 
         // 验证：两个分支事务都成功
         assertEquals(initialBalance - 100, finalBalance, "用户余额应该减少100");

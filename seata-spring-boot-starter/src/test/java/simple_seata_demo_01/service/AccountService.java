@@ -20,6 +20,11 @@ public class AccountService {
         jdbcTemplate.update("UPDATE account SET balance = balance + ? WHERE id = ?", amount, toId);
     }
 
+    public void transferMoneyCommitNoTx(int fromId, int toId, int amount) {
+        jdbcTemplate.update("UPDATE account SET balance = balance - ? WHERE id = ?", amount, fromId);
+        jdbcTemplate.update("UPDATE account SET balance = balance + ? WHERE id = ?", amount, toId);
+    }
+
     @GlobalTransactional
     public void transferRollback(int fromId, int toId, int amount) {
         System.out.println(RootContext.getXID());

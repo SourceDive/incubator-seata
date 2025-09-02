@@ -5,6 +5,9 @@ import org.apache.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 协调两个分支事务。
+ */
 @Service
 public class OrderService {
 
@@ -32,7 +35,7 @@ public class OrderService {
         try {
             // 分支事务1：从账户扣款
             System.out.println("执行分支事务1：账户扣款");
-            accountService.transferMoneyCommit(userId, 0, totalAmount); // 0表示系统账户
+            accountService.transferMoneyCommitNoTx(userId, 0, totalAmount); // 0表示系统账户
             
             // 分支事务2：减少库存
             System.out.println("执行分支事务2：减少库存");
