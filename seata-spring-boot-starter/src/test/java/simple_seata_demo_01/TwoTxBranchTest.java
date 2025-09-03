@@ -11,8 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import simple_seata_demo_01.config.TestConfig;
 import simple_seata_demo_01.service.OrderService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 分布式事务测试类
@@ -146,6 +145,9 @@ class TwoTxBranchTest {
         // 检查最终状态
         String finalXid = RootContext.getXID();
         System.out.println("测试后XID: " + (finalXid != null ? finalXid : "null"));
+
+        assertNull(initialXid, "初始xid应该为null");
+        assertNull(finalXid, "终止xid应该为null");
 
         System.out.println("✅ XID传播测试完成！");
     }
