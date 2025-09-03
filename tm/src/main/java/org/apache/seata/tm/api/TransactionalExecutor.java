@@ -45,28 +45,33 @@ public interface TransactionalExecutor {
     enum Code {
 
         /**
+         * <p>未知</p>
          * Unknown code.
          */
         Unknown,
         /**
+         * <p>开启事务失败</p>
          * Begin failure code.
          */
         //
         BeginFailure,
 
         /**
+         * <p>全局提交失败</p>
          * Commit failure code.
          */
         //
         CommitFailure,
 
         /**
+         * <p>全局回滚失败</p>
          * Rollback failure code.
          */
         //
         RollbackFailure,
 
         /**
+         * <p>全局回滚成功</p>
          * Rollback done code.
          */
         //
