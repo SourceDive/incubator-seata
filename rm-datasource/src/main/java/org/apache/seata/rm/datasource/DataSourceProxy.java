@@ -61,6 +61,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
 
     private String resourceId;
 
+    // 数据库类型
     private String dbType;
 
     private String userName;
@@ -103,9 +104,11 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
         init(targetDataSource, resourceGroupId);
     }
 
+    // DataSourceProxy不会直接封装 Connection，而是把 connection 中的一些属性赋值给自己
     private void init(DataSource dataSource, String resourceGroupId) {
         this.resourceGroupId = resourceGroupId;
         try (Connection connection = dataSource.getConnection()) {
+            // 这里获取的物理连接只是初始化时的临时连接，用完之后会立即关闭。不会始终持有这个连接。
             jdbcUrl = connection.getMetaData().getURL();
             dbType = JdbcUtils.getDbType(jdbcUrl);
             if (JdbcConstants.ORACLE.equals(dbType)) {
@@ -114,6 +117,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
                 validMySQLVersion(connection);
                 checkDerivativeProduct();
             }
+            // 检查 undo-log 表是否存在。
             checkUndoLogTableExist(connection);
 
         } catch (SQLException e) {
@@ -123,6 +127,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
             LOGGER.info("SQLServer support in AT mode is currently an experimental function, " +
                     "if you have any problems in use, please feedback to us");
         }
+        // 为 DataSourceProxy 设置 resourceid，是从 jdbcurl 中获取的。
         initResourceId();
         DefaultResourceManager.get().registerResource(this);
         TableMetaCacheFactory.registerTableMeta(this);

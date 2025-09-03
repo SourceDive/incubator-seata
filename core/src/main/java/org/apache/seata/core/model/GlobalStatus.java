@@ -206,6 +206,7 @@ public enum GlobalStatus {
     }
 
     /**
+     * <p>二阶段是否为终态。</p>
      * Is two phase success boolean.
      *
      * @param status the status

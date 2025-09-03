@@ -141,6 +141,7 @@ public abstract class AbstractResourceManager implements ResourceManager {
 
     @Override
     public void registerResource(Resource resource) {
+        // 向 seata-sever(TC) 注册 resource
         RmNettyRemotingClient.getInstance().registerResource(resource.getResourceGroupId(), resource.getResourceId());
     }
 

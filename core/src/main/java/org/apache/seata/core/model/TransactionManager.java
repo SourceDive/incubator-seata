@@ -19,7 +19,7 @@ package org.apache.seata.core.model;
 import org.apache.seata.core.exception.TransactionException;
 
 /**
- * <p>事务管理器：发起、提交、回滚。
+ * <p>事务管理器：发起、提交、回滚。面向框架内部。
  * <ul>begin()</ul>
  * <ul>commit()</ul>
  * <ul>rollback()</ul>

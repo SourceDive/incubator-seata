@@ -99,6 +99,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
     @Override
     public void begin(int timeout, String name) throws TransactionException {
         this.createTime = System.currentTimeMillis();
+        // 发起者有权限进行事务的发起。
         if (role != GlobalTransactionRole.Launcher) {
             assertXIDNotNull();
             if (LOGGER.isDebugEnabled()) {
@@ -113,6 +114,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
             throw new IllegalStateException("Global transaction already exists," +
                 " can't begin a new global transaction, currentXid = " + currentXid);
         }
+        // 委托给 TM 处理。
         xid = transactionManager.begin(null, null, name, timeout);
         status = GlobalStatus.Begin;
         // 绑定xid到当前线程
@@ -125,6 +127,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
     @SuppressWarnings("lgtm[java/constant-comparison]")
     @Override
     public void commit() throws TransactionException {
+        // 发起者有权限进行提交。
         if (role == GlobalTransactionRole.Participant) {
             // Participant has no responsibility of committing
             if (LOGGER.isDebugEnabled()) {
@@ -141,6 +144,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
             while (retry > 0) {
                 try {
                     retry--;
+                    // 委托给 TM 处理。
                     status = transactionManager.commit(xid);
                     break;
                 } catch (Throwable ex) {
@@ -163,7 +167,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
     @SuppressWarnings("lgtm[java/constant-comparison]")
     @Override
     public void rollback() throws TransactionException {
-        // 回滚动作也必须由 Launcher 来发起。
+        // 发起者有权限进行回滚。
         if (role == GlobalTransactionRole.Participant) {
             // Participant has no responsibility of rollback
             if (LOGGER.isDebugEnabled()) {
@@ -181,6 +185,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
             while (retry > 0) {
                 try {
                     retry--;
+                    // 委托给 TM 处理。
                     status = transactionManager.rollback(xid);
                     break;
                 } catch (Throwable ex) {
@@ -258,6 +263,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
             throw new IllegalStateException();
         }
 
+        // 委托给 TM 处理。
         status = transactionManager.globalReport(xid, globalStatus);
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("[{}] report status: {}", xid, status);

@@ -18,15 +18,20 @@ package org.apache.seata.tm.api;
 
 import org.apache.seata.core.exception.TransactionException;
 import org.apache.seata.core.model.GlobalStatus;
+import org.apache.seata.core.model.TransactionManager;
 import org.apache.seata.tm.api.transaction.SuspendedResourcesHolder;
 
 /**
- * Global transaction.
+ * Global transaction. 面向开发者的门面。
  * <ul>1、begin()</ul>
  * <ul>2、commit()</ul>
  * <ul>3、rollback()</ul>
  * <ul>4、suspend()</ul>
  * <ul>5、resume()</ul>
+ *
+ * tx的这些动作最终还是由tm来完成的。
+ *
+ * @see TransactionManager
  */
 public interface GlobalTransaction extends BaseTransaction {
 
