@@ -17,6 +17,7 @@
 package org.apache.seata.tm.api;
 
 /**
+ * <p>也是一个生命周期钩子接口。</p>
  * Callback on failure.
  *
  */

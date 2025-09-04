@@ -39,6 +39,8 @@ import org.apache.seata.core.rpc.netty.TmNettyRemotingClient;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * <p>默认的 tx 的 manager.</p>
+ * <p>操纵 tx。</p>
  * The type Default transaction manager.
  *
  */

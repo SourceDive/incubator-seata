@@ -21,6 +21,12 @@ import java.util.Collections;
 import java.util.List;
 
 
+/**
+ * tx hook 的 manager.
+ * <ul>1、获取</ul>
+ * <ul>2、注册</ul>
+ * <ul>3、清理</ul>
+ */
 public final class TransactionHookManager {
 
     private TransactionHookManager() {
