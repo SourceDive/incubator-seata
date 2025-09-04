@@ -19,12 +19,14 @@ package org.apache.seata.core.model;
 import org.apache.seata.core.exception.TransactionException;
 
 /**
+ * <p>上行接口。RM 是主动请求方。</p>
  * Resource Manager: send outbound request to TC.
  *
  */
 public interface ResourceManagerOutbound {
 
     /**
+     * <p>注册分支事务。</p>
      * Branch register long.
      *
      * @param branchType the branch type

@@ -19,6 +19,7 @@ package org.apache.seata.core.model;
 import org.apache.seata.core.exception.TransactionException;
 
 /**
+ * <p>下行接口。RM 是被调用的一方。</p>
  * Resource Manager.
  *
  * Control a branch transaction commit or rollback.
@@ -27,6 +28,7 @@ import org.apache.seata.core.exception.TransactionException;
 public interface ResourceManagerInbound {
 
     /**
+     * <p>提交分支事务。</p>
      * Commit a branch transaction.
      *
      * @param branchType      the branch type
@@ -41,6 +43,7 @@ public interface ResourceManagerInbound {
     BranchStatus branchCommit(BranchType branchType, String xid, long branchId, String resourceId, String applicationData) throws TransactionException;
 
     /**
+     * <p>回滚分支事务。</p>
      * Rollback a branch transaction.
      *
      * @param branchType      the branch type
