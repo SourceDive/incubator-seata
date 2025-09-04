@@ -19,6 +19,7 @@ package org.apache.seata.rm.datasource.undo;
 import org.apache.seata.common.exception.NotSupportYetException;
 
 /**
+ * <p>工厂：生产 undo executor.</p>
  * The type Undo executor factory.
  *
  */

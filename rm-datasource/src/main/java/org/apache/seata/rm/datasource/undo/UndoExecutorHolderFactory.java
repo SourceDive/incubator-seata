@@ -23,6 +23,7 @@ import org.apache.seata.common.loader.EnhancedServiceLoader;
 import org.apache.seata.common.util.CollectionUtils;
 
 /**
+ * <p>工厂：生产 UndoExecutorHolder。</p>
  * The Type UndoExecutorHolderFactory
  *
  */

@@ -24,6 +24,7 @@ import org.apache.seata.common.util.CollectionUtils;
 import org.apache.seata.common.util.StringUtils;
 
 /**
+ * <p>工厂：生产 undo log parse。</p>
  * The type Undo log parser factory.
  *
  */

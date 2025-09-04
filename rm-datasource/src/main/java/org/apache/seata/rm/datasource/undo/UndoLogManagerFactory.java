@@ -23,6 +23,7 @@ import org.apache.seata.common.loader.EnhancedServiceLoader;
 import org.apache.seata.common.util.CollectionUtils;
 
 
+// 工厂 -> 生产 UndoLogManager
 public class UndoLogManagerFactory {
 
     private static final Map<String, UndoLogManager> UNDO_LOG_MANAGER_MAP = new ConcurrentHashMap<>();
