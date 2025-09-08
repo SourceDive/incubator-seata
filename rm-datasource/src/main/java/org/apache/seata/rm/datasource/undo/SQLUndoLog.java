@@ -33,8 +33,10 @@ public class SQLUndoLog implements java.io.Serializable {
 
     private String tableName;
 
+    // 前置镜像
     private TableRecords beforeImage;
 
+    // 后置镜像
     private TableRecords afterImage;
 
     /**

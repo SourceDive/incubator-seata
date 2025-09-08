@@ -4,6 +4,7 @@ import org.apache.seata.core.context.RootContext;
 import org.apache.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 协调两个分支事务。
@@ -55,6 +56,7 @@ public class OrderService {
      * 2. 减少库存（会失败，触发回滚）
      */
     @GlobalTransactional
+    @Transactional
     public void createOrderWithRollback(int userId, int productId, int quantity, int price) {
         System.out.println("=== 开始创建订单（会回滚） ===");
         System.out.println("订单服务 - XID: " + RootContext.getXID());
@@ -66,7 +68,7 @@ public class OrderService {
         try {
             // 分支事务1：从账户扣款
             System.out.println("执行分支事务1：账户扣款");
-            accountService.transferMoneyCommit(userId, 0, totalAmount);
+            accountService.transferMoneyCommitNoTx(userId, 0, totalAmount);
             
             // 分支事务2：减少库存（这里会失败，触发回滚）
             System.out.println("执行分支事务2：减少库存（会失败）");

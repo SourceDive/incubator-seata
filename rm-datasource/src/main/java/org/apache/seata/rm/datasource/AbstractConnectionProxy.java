@@ -54,6 +54,8 @@ public abstract class AbstractConnectionProxy implements Connection {
     protected DataSourceProxy dataSourceProxy;
 
     /**
+     * <p>我感觉还是原始连接这个名称更好。</p>
+     * <p>目标连接。原始的、未被Seata代理的物理数据库连接。</p>
      * The Target connection.
      */
     protected Connection targetConnection;

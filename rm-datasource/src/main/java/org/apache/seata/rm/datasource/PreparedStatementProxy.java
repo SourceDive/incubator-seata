@@ -28,6 +28,8 @@ import org.apache.seata.sqlparser.ParametersHolder;
 /**
  * The type Prepared statement proxy.
  *
+ * <p>这里是注册分支事务的入口。</p>
+ *
  */
 public class PreparedStatementProxy extends AbstractPreparedStatementProxy
     implements PreparedStatement, ParametersHolder {

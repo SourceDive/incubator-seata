@@ -38,6 +38,7 @@ public abstract class AbstractStatementProxy<T extends Statement> implements Sta
     protected AbstractConnectionProxy connectionProxy;
 
     /**
+     * <p>原始SQL语句对象。</p>
      * The Target statement.
      */
     protected T targetStatement;

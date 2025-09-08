@@ -63,7 +63,7 @@ public class ConnectionContext {
 
     private String xid;
     private Long branchId;
-    private boolean isGlobalLockRequire;
+    private boolean isGlobalLockRequire; // 是否需要申请全局锁。一、如果已经处于全局事务中，则不需要。
     private Savepoint currentSavepoint = DEFAULT_SAVEPOINT;
     private boolean autoCommitChanged;
     private final Map<String, Object> applicationData = new HashMap<>(2, 1.0001f);

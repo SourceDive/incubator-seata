@@ -246,6 +246,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
     }
 
     private void processGlobalTransactionCommit() throws SQLException {
+        // 1、注册分支事务
         try {
             register();
         } catch (TransactionException e) {
@@ -253,7 +254,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
         }
         try {
             UndoLogManagerFactory.getUndoLogManager(this.getDbType()).flushUndoLogs(this);
-            targetConnection.commit();
+            targetConnection.commit(); // 此句执行完毕后，本地事务结束。
         } catch (Throwable ex) {
             LOGGER.error("process connectionProxy commit error: {}", ex.getMessage(), ex);
             report(false);
@@ -262,6 +263,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
         if (IS_REPORT_SUCCESS_ENABLE) {
             report(true);
         }
+        // 重置 context，各种属性都销去。
         context.reset();
     }
 
@@ -270,6 +272,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
             return;
         }
 
+        // 注册分支事务。
         Long branchId = DefaultResourceManager.get().branchRegister(BranchType.AT, getDataSourceProxy().getResourceId(),
             null, context.getXid(), context.getApplicationData(),
             context.buildLockKeys());
