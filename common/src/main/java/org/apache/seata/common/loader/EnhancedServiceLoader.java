@@ -39,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <p>seata自己的 SPI 机制。</p>
+ * <p>服务加载器。</p>
  * The type Enhanced service loader.
  */
 public class EnhancedServiceLoader {
@@ -470,7 +472,7 @@ public class EnhancedServiceLoader {
             if (Scope.SINGLETON.equals(definition.getScope())) {
                 Holder<Object> holder = CollectionUtils.computeIfAbsent(definitionToInstanceMap, definition,
                     key -> new Holder<>());
-                Object instance = holder.get();
+                Object instance = holder.get(); // 双锁检测，缩小锁范围。
                 if (instance == null) {
                     synchronized (holder) {
                         instance = holder.get();

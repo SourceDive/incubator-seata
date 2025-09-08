@@ -19,7 +19,11 @@ package org.apache.seata.core.model;
 import java.util.Map;
 
 /**
- * <p>资源管理器：注册资源、注销资源、获取资源</p>
+ * <p>资源管理器：
+ * <ul>1、注册资源</ul>
+ * <ul>2、注销资源</ul>
+ * <ul>3、获取资源</ul>
+ * </p>
  * Resource Manager: common behaviors.
  *
  */

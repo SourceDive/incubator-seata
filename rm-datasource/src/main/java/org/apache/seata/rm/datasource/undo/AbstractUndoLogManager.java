@@ -310,7 +310,9 @@ public abstract class AbstractUndoLogManager implements UndoLogManager {
 
         for (; ; ) {
             try {
+                // 代理连接
                 connectionProxy = dataSourceProxy.getConnection();
+                // 原始连接
                 conn = connectionProxy.getTargetConnection();
                 originalAutoCommit = conn.getAutoCommit();
 

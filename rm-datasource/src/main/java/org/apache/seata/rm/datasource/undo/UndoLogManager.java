@@ -39,6 +39,7 @@ public interface UndoLogManager {
     void flushUndoLogs(ConnectionProxy cp) throws SQLException;
 
     /**
+     * <p>重做。回滚时触发。</p>
      * Undo.
      *
      * @param dataSourceProxy the data source proxy

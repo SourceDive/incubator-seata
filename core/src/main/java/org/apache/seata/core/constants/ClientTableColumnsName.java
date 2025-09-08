@@ -17,6 +17,7 @@
 package org.apache.seata.core.constants;
 
 /**
+ * <p>undo log 的全部表字段名称。</p>
  * client table columns name.
  *
  */

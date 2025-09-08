@@ -17,6 +17,7 @@
 package org.apache.seata.common.executor;
 
 /**
+ * <p>生命周期接口。</p>
  * The interface Initialize.
  *
  */

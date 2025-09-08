@@ -54,6 +54,7 @@ public interface ResourceManagerOutbound {
     void branchReport(BranchType branchType, String xid, long branchId, BranchStatus status, String applicationData) throws TransactionException;
 
     /**
+     * <p>查询是否可以获取锁。</p>
      * Lock query boolean.
      *
      * @param branchType the branch type
