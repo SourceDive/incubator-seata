@@ -67,6 +67,9 @@ public class AsyncWorker {
 
     private final ScheduledExecutorService scheduledExecutor;
 
+    // 执行二阶段任务的 worker。
+    // 线程名前缀是：AsyncWorker
+    // 线程都为 daemon 线程。
     public AsyncWorker(DataSourceManager dataSourceManager) {
         this.dataSourceManager = dataSourceManager;
 
@@ -89,9 +92,11 @@ public class AsyncWorker {
      * then doBranchCommit urgently(so that the queue could be empty again) and retry this process.
      */
     private void addToCommitQueue(Phase2Context context) {
+        // 向队列中添加任务成功。
         if (commitQueue.offer(context)) {
             return;
         }
+        // 添加失败，先执行自信已有的任务后，腾出空间，再次重试添加。
         CompletableFuture.runAsync(this::doBranchCommitSafely, scheduledExecutor)
                 .thenRun(() -> addToCommitQueue(context));
     }
@@ -111,14 +116,17 @@ public class AsyncWorker {
     }
 
     private void doBranchCommit() {
+        // 先查看队列中是否有任务，无任务直接返回。
         if (commitQueue.isEmpty()) {
             return;
         }
 
+        // 把队列中的二阶段任务全部移动到列表中。
         // transfer all context currently received to this list
         List<Phase2Context> allContexts = new LinkedList<>();
         commitQueue.drainTo(allContexts);
 
+        // 按 resourceId 进行分组。应该是批量进行处理。
         // group context by their resourceId
         Map<String, List<Phase2Context>> groupedContexts = groupedByResourceId(allContexts);
 
@@ -144,6 +152,7 @@ public class AsyncWorker {
             LOGGER.warn("resourceId is empty and will skip.");
             return;
         }
+        // 没有数据源，直接返回。
         DataSourceProxy dataSourceProxy = dataSourceManager.get(resourceId);
         if (dataSourceProxy == null) {
             LOGGER.warn("failed to find resource for {} and requeue", resourceId);
@@ -151,11 +160,14 @@ public class AsyncWorker {
             return;
         }
 
+        // 有数据源，处理二阶段的任务。
         Connection conn = null;
         try {
+            // 新申请一个原始物理连接
             conn = dataSourceProxy.getPlainConnection();
             UndoLogManager undoLogManager = UndoLogManagerFactory.getUndoLogManager(dataSourceProxy.getDbType());
 
+            // 分批次进行删除。
             // split contexts into several lists, with each list contain no more element than limit size
             List<List<Phase2Context>> splitByLimit = Lists.partition(contexts, UNDOLOG_DELETE_LIMIT_SIZE);
             for (List<Phase2Context> partition : splitByLimit) {
@@ -194,6 +206,7 @@ public class AsyncWorker {
         }
     }
 
+    // 二阶段上下文
     static class Phase2Context {
 
         /**

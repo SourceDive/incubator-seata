@@ -252,14 +252,19 @@ public class ConnectionProxy extends AbstractConnectionProxy {
         } catch (TransactionException e) {
             recognizeLockKeyConflictException(e, context.buildLockKeys());
         }
+        // 2、处理 undo log
         try {
+            // 加载 UndoLogManager;
+            // 生成 undo log，并插入表中
             UndoLogManagerFactory.getUndoLogManager(this.getDbType()).flushUndoLogs(this);
+            // 原始连接提交。如果数据库用的mysql，那就会用mysql的提交实现去执行。
             targetConnection.commit(); // 此句执行完毕后，本地事务结束。
         } catch (Throwable ex) {
             LOGGER.error("process connectionProxy commit error: {}", ex.getMessage(), ex);
             report(false);
             throw new SQLException(ex);
         }
+        // 分支上报TC。一阶段结束。
         if (IS_REPORT_SUCCESS_ENABLE) {
             report(true);
         }

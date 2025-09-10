@@ -28,7 +28,7 @@ import org.apache.seata.core.exception.TransactionException;
 public interface ResourceManagerInbound {
 
     /**
-     * <p>提交分支事务。</p>
+     * <p>提交分支事务(二阶段)。</p>
      * Commit a branch transaction.
      *
      * @param branchType      the branch type

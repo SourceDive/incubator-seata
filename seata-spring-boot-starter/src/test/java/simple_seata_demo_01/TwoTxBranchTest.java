@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import simple_seata_demo_01.config.TestConfig;
 import simple_seata_demo_01.service.OrderService;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -67,7 +69,7 @@ class TwoTxBranchTest {
 
     @Test
     @DisplayName("测试分布式事务提交 - 两个分支事务都成功")
-    void testDistributedTransactionCommit() {
+    void testDistributedTransactionCommit() throws InterruptedException {
         System.out.println("=== 测试分布式事务提交 ===");
 
         // 记录初始状态
@@ -92,6 +94,9 @@ class TwoTxBranchTest {
         assertEquals(initialStock - 10, finalStock, "产品库存应该减少10");
 
         System.out.println("✅ 分布式事务提交测试通过！");
+
+        // 延长main线程时长，防止jvm退出。
+        TimeUnit.SECONDS.sleep(20);
     }
 
     @Test

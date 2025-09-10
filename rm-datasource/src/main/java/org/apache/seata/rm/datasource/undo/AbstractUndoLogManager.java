@@ -248,6 +248,7 @@ public abstract class AbstractUndoLogManager implements UndoLogManager {
     }
 
     /**
+     * <p>生成undo log，并且插入表中</p>
      * Flush undo logs.
      *
      * @param cp the cp
