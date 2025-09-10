@@ -100,6 +100,7 @@ public abstract class AbstractConnectionProxy implements Connection {
 
     @Override
     public Statement createStatement() throws SQLException {
+        // 获取原始连接创建 Statement 对象。
         Statement targetStatement = getTargetConnection().createStatement();
         return new StatementProxy(this, targetStatement);
     }
@@ -123,6 +124,7 @@ public abstract class AbstractConnectionProxy implements Connection {
             }
         }
         if (targetPreparedStatement == null) {
+            // 获取原始连接创建 PrepareStatement 对象。
             targetPreparedStatement = getTargetConnection().prepareStatement(sql);
         }
         return new PreparedStatementProxy(this, targetPreparedStatement, sql);

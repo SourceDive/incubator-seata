@@ -191,6 +191,7 @@ public class ConnectionContext {
         if (xid == null) {
             throw new IllegalArgumentException("xid should not be null");
         }
+        // context 是否处于全局事务中
         if (!inGlobalTransaction()) {
             setXid(xid);
         } else {

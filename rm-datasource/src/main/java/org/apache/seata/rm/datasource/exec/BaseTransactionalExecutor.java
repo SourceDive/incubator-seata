@@ -116,6 +116,7 @@ public abstract class BaseTransactionalExecutor<T, S extends Statement> implemen
         this.sqlRecognizers = sqlRecognizers;
     }
 
+    // execute() -> doExecute()
     @Override
     public T execute(Object... args) throws Throwable {
         String xid = RootContext.getXID();
