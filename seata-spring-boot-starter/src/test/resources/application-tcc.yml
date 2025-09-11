@@ -1,33 +1,18 @@
-# Seata TCC 配置 - 使用MySQL数据库
+# Seata 配置 - 使用MySQL数据库
 seata:
   enabled: true
-  application-id: tcc-test
-  tx-service-group: tcc_test_tx_group
+  application-id: tcc_demo_01
+  tx-service-group: tcc_demo_01_group
   service:
     vgroup-mapping:
-      tcc_test_tx_group: default
+      my_test_tx_group: default
     grouplist:
       default: 127.0.0.1:8091
   config:
     type: file
   registry:
     type: file
-  # TCC 模式下的数据源代理模式配置说明：
-  # 
-  # 选项1: NONE - 推荐用于纯 TCC 模式
-  #   - 不使用数据源代理，直接使用原始数据库连接
-  #   - TCC 完全通过业务逻辑实现事务补偿
-  #   - 不依赖 AT 模式的 UNDO_LOG 机制
-  #   - 性能更好，但需要手动管理 XID 传播
-  #
-  # 选项2: AT - 适用于混合模式
-  #   - 使用数据源代理，支持 AT 模式的自动回滚
-  #   - 可以同时使用 TCC 和 AT 模式
-  #   - 自动处理 XID 传播和连接管理
-  #   - 适合需要两种模式并存的场景
-  #
-  # 当前配置：NONE（纯 TCC 模式）
-  data-source-proxy-mode: NONE
+  data-source-proxy-mode: AT
   client:
     rm:
       async-commit-buffer-limit: 10000
@@ -38,9 +23,6 @@ seata:
       report-retry-count: 5
       table-meta-check-enable: false
       report-success-enable: false
-      # TCC 模式相关配置
-      tcc:
-        action-interceptor-order: -2147482648
     tm:
       commit-retry-count: 5
       rollback-retry-count: 5
@@ -51,10 +33,10 @@ seata:
   log:
     exception-rate: 100
 
-# MySQL 数据库配置 - TCC 测试数据库
+# MySQL 数据库配置
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/seata_tcc_20250911?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1:3306/seata_test_20250804?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: mysql123

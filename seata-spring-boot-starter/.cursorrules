@@ -212,3 +212,4 @@ public GlobalTransactionScanner globalTransactionScanner() {
 - 确保所有方法的幂等性
 - 合理处理异常情况
 - 使用数据库记录 TCC 状态（生产环境）
+

@@ -51,3 +51,4 @@ SELECT * FROM account;
 
 -- 显示 TCC 记录表结构
 DESCRIBE tcc_record;
+

@@ -1,24 +1,22 @@
 package simple_tcc_demo_01.service;
 
+import org.apache.seata.core.context.RootContext;
 import org.apache.seata.rm.tcc.api.BusinessActionContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 
 /**
- * 账户 TCC 服务实现类
+ * 账户 TCC 服务实现类<br><br>
  * 
- * 演示最简单的 TCC 模式实现
+ * 使用数据库存储 TCC 状态，实现真正的分布式事务<br>
+ * 通过 tcc_record 表记录 Try-Confirm-Cancel 的状态
  */
 @Service
 public class AccountTccServiceImpl implements AccountTccService {
 
     private final JdbcTemplate jdbcTemplate;
-    
-    // 用于存储 Try 阶段的数据，实际项目中应该用数据库存储
-    private final Map<String, Integer> frozenAmounts = new ConcurrentHashMap<>();
 
     public AccountTccServiceImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -47,16 +45,29 @@ public class AccountTccServiceImpl implements AccountTccService {
                 return false;
             }
             
-            // 2. 冻结金额（在实际项目中，这里应该更新数据库）
-            frozenAmounts.put(accountId, amount);
+            // 2. 生成 TCC 记录ID
+            String tccId = UUID.randomUUID().toString();
+            String xid = getCurrentXid();
+            long branchId = System.currentTimeMillis();
             
-            // 3. 记录冻结日志（模拟）
-            System.out.println("✅ 金额冻结成功，冻结金额: " + amount);
+            // 3. 在数据库中记录 TCC 状态
+            int inserted = jdbcTemplate.update(
+                "INSERT INTO tcc_record (id, xid, branch_id, account_id, amount, status) VALUES (?, ?, ?, ?, ?, 'TRY')",
+                tccId, xid, branchId, accountId, amount
+            );
+            
+            if (inserted == 0) {
+                System.out.println("❌ TCC 记录插入失败");
+                return false;
+            }
+            
+            System.out.println("✅ 金额冻结成功，TCC记录ID: " + tccId + ", 冻结金额: " + amount);
             
             return true;
             
         } catch (Exception e) {
             System.out.println("❌ Try 阶段失败: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
@@ -69,13 +80,18 @@ public class AccountTccServiceImpl implements AccountTccService {
             // 从上下文中获取参数
             String accountId = (String) context.getActionContext("accountId");
             Integer amount = (Integer) context.getActionContext("amount");
+            String xid = context.getXid();
             
-            System.out.println("账户ID: " + accountId + ", 扣款金额: " + amount);
+            System.out.println("账户ID: " + accountId + ", 扣款金额: " + amount + ", XID: " + xid);
             
-            // 1. 检查是否在 Try 阶段冻结了金额
-            Integer frozenAmount = frozenAmounts.get(accountId);
-            if (frozenAmount == null || !frozenAmount.equals(amount)) {
-                System.out.println("❌ 未找到对应的冻结金额");
+            // 1. 查找对应的 TCC 记录
+            Integer recordAmount = jdbcTemplate.queryForObject(
+                "SELECT amount FROM tcc_record WHERE xid = ? AND account_id = ? AND status = 'TRY'",
+                Integer.class, xid, accountId
+            );
+            
+            if (recordAmount == null || !recordAmount.equals(amount)) {
+                System.out.println("❌ 未找到对应的 TCC 记录或金额不匹配");
                 return false;
             }
             
@@ -91,14 +107,18 @@ public class AccountTccServiceImpl implements AccountTccService {
                 return false;
             }
             
-            // 3. 清理冻结记录
-            frozenAmounts.remove(accountId);
+            // 3. 更新 TCC 记录状态为 CONFIRM
+            jdbcTemplate.update(
+                "UPDATE tcc_record SET status = 'CONFIRM' WHERE xid = ? AND account_id = ? AND status = 'TRY'",
+                xid, accountId
+            );
             
             System.out.println("✅ 扣款成功，实际扣款: " + amount);
             return true;
             
         } catch (Exception e) {
             System.out.println("❌ Confirm 阶段失败: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
@@ -111,39 +131,79 @@ public class AccountTccServiceImpl implements AccountTccService {
             // 从上下文中获取参数
             String accountId = (String) context.getActionContext("accountId");
             Integer amount = (Integer) context.getActionContext("amount");
+            String xid = context.getXid();
             
-            System.out.println("账户ID: " + accountId + ", 解冻金额: " + amount);
+            System.out.println("账户ID: " + accountId + ", 解冻金额: " + amount + ", XID: " + xid);
             
-            // 1. 检查是否有冻结记录
-            Integer frozenAmount = frozenAmounts.get(accountId);
-            if (frozenAmount == null || !frozenAmount.equals(amount)) {
-                System.out.println("❌ 未找到对应的冻结记录");
+            // 1. 查找对应的 TCC 记录
+            Integer recordAmount = jdbcTemplate.queryForObject(
+                "SELECT amount FROM tcc_record WHERE xid = ? AND account_id = ? AND status = 'TRY'",
+                Integer.class, xid, accountId
+            );
+            
+            if (recordAmount == null || !recordAmount.equals(amount)) {
+                System.out.println("❌ 未找到对应的 TCC 记录或金额不匹配");
                 return false;
             }
             
-            // 2. 清理冻结记录（在实际项目中，这里应该更新数据库）
-            frozenAmounts.remove(accountId);
+            // 2. 更新 TCC 记录状态为 CANCEL（解冻）
+            int updated = jdbcTemplate.update(
+                "UPDATE tcc_record SET status = 'CANCEL' WHERE xid = ? AND account_id = ? AND status = 'TRY'",
+                xid, accountId
+            );
+            
+            if (updated == 0) {
+                System.out.println("❌ TCC 记录状态更新失败");
+                return false;
+            }
             
             System.out.println("✅ 金额解冻成功，解冻金额: " + amount);
             return true;
             
         } catch (Exception e) {
             System.out.println("❌ Cancel 阶段失败: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
     
     /**
-     * 获取当前冻结的金额（用于测试）
+     * 获取当前冻结的金额（用于测试）<br>
+     * 从数据库查询 TRY 状态的记录
      */
     public int getFrozenAmount(String accountId) {
-        return frozenAmounts.getOrDefault(accountId, 0);
+        try {
+            Integer amount = jdbcTemplate.queryForObject(
+                "SELECT COALESCE(SUM(amount), 0) FROM tcc_record WHERE account_id = ? AND status = 'TRY'",
+                Integer.class, accountId
+            );
+            return amount != null ? amount : 0;
+        } catch (Exception e) {
+            System.out.println("查询冻结金额失败: " + e.getMessage());
+            return 0;
+        }
     }
     
     /**
-     * 清理所有冻结记录（用于测试）
+     * 清理所有冻结记录（用于测试）<br>
+     * 清理数据库中的 TCC 记录
      */
     public void clearFrozenAmounts() {
-        frozenAmounts.clear();
+        try {
+            jdbcTemplate.update("DELETE FROM tcc_record");
+            System.out.println("✅ 已清理所有 TCC 记录");
+        } catch (Exception e) {
+            System.out.println("❌ 清理 TCC 记录失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 获取当前 XID<br>
+     * 用于 TCC 记录关联
+     */
+    private String getCurrentXid() {
+        String xid = RootContext.getXID();
+        return xid != null ? xid : "local-" + System.currentTimeMillis();
     }
 }
+
