@@ -44,4 +44,17 @@ public interface AccountTccService {
      * @return 是否成功
      */
     boolean cancel(BusinessActionContext context);
+    
+    /**
+     * 获取当前冻结的金额（用于测试）
+     * 
+     * @param accountId 账户ID
+     * @return 冻结金额
+     */
+    int getFrozenAmount(String accountId);
+    
+    /**
+     * 清理所有冻结记录（用于测试）
+     */
+    void clearFrozenAmounts();
 }

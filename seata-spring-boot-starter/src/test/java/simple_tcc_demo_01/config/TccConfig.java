@@ -27,7 +27,7 @@ public class TccConfig {
         ds.setUrl("jdbc:mysql://127.0.0.1:3306/seata_tcct_20250911?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true");
         ds.setUsername("root");
         ds.setPassword("mysql123");
-        
+
         // 使用 DataSourceProxy 包装，启用 Seata
         return new DataSourceProxy(ds, "mysql");
     }
