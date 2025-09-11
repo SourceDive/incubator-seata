@@ -271,6 +271,14 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
     }
 
     /**
+     * <p>
+     * 扫描注解的类型：
+     * <ul>1、@GlobalTransactional</ul>
+     * <ul>2、GlobalLock</ul>
+     * <ul>3、@LocalTCC</ul>
+     * <ul>4、@TwoPhaseBusinessAction</ul>
+     * </p>
+     *
      * The following will be scanned, and added corresponding interceptor:
      * <p>
      * TM:
@@ -498,6 +506,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
             initClient();
         }
 
+        // 寻找需要增强的bean，加入到集合中。
         this.findBusinessBeanNamesNeededEnhancement();
     }
 
@@ -506,6 +515,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
             ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
             ConfigurableListableBeanFactory configurableListableBeanFactory = configurableApplicationContext.getBeanFactory();
 
+            // 拿出容器中的所有bean定义，挨个去匹配。
             String[] beanNames = applicationContext.getBeanDefinitionNames();
             for (String contextBeanName : beanNames) {
                 BeanDefinition beanDefinition = configurableListableBeanFactory.getBeanDefinition(contextBeanName);

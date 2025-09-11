@@ -100,6 +100,7 @@ public class DefaultInterfaceParser implements InterfaceParser {
 
     @Override
     public IfNeedEnhanceBean parseIfNeedEnhancement(Class<?> beanClass) {
+        // 拿所有事务模式的parse，挨个去parse
         for (InterfaceParser interfaceParser : ALL_INTERFACE_PARSERS) {
             IfNeedEnhanceBean ifNeedEnhanceBean = interfaceParser.parseIfNeedEnhancement(beanClass);
             if (ifNeedEnhanceBean.isIfNeed()) {
