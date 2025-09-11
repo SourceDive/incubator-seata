@@ -72,35 +72,31 @@ public class DatabaseInitializer {
         System.out.println("创建表结构...");
         
         // 创建账户表
-        String createAccountTable = """
-            CREATE TABLE IF NOT EXISTS account (
-                id INT PRIMARY KEY,
-                name VARCHAR(50) NOT NULL,
-                balance INT NOT NULL DEFAULT 0,
-                created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-            """;
+        String createAccountTable = "CREATE TABLE IF NOT EXISTS account (" +
+            "id INT PRIMARY KEY," +
+            "name VARCHAR(50) NOT NULL," +
+            "balance INT NOT NULL DEFAULT 0," +
+            "created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+            "updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
         
         jdbcTemplate.execute(createAccountTable);
         System.out.println("✅ 账户表创建成功");
         
         // 创建 TCC 记录表
-        String createTccRecordTable = """
-            CREATE TABLE IF NOT EXISTS tcc_record (
-                id VARCHAR(64) PRIMARY KEY,
-                xid VARCHAR(128) NOT NULL,
-                branch_id BIGINT NOT NULL,
-                account_id VARCHAR(32) NOT NULL,
-                amount INT NOT NULL,
-                status VARCHAR(16) NOT NULL DEFAULT 'TRY',
-                created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                INDEX idx_xid (xid),
-                INDEX idx_account_id (account_id),
-                INDEX idx_status (status)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-            """;
+        String createTccRecordTable = "CREATE TABLE IF NOT EXISTS tcc_record (" +
+            "id VARCHAR(64) PRIMARY KEY," +
+            "xid VARCHAR(128) NOT NULL," +
+            "branch_id BIGINT NOT NULL," +
+            "account_id VARCHAR(32) NOT NULL," +
+            "amount INT NOT NULL," +
+            "status VARCHAR(16) NOT NULL DEFAULT 'TRY'," +
+            "created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+            "updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," +
+            "INDEX idx_xid (xid)," +
+            "INDEX idx_account_id (account_id)," +
+            "INDEX idx_status (status)" +
+            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
         
         jdbcTemplate.execute(createTccRecordTable);
         System.out.println("✅ TCC记录表创建成功");
