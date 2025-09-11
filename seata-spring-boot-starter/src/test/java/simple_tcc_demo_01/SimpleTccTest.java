@@ -32,17 +32,17 @@ class SimpleTccTest {
 
     @BeforeEach
     void setUp() {
-        System.out.println("\n" + "=".repeat(50));
+        System.out.println("\n==================================================");
         System.out.println("开始执行测试前初始化");
-
+        
         // 初始化数据库
         databaseInitializer.initializeDatabase();
-
+        
         // 清理测试数据
         simpleTccService.clearFrozenRecords();
-
+        
         System.out.println("测试前初始化完成");
-        System.out.println("=".repeat(50));
+        System.out.println("==================================================");
     }
 
     @Test
