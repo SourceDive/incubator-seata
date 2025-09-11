@@ -1,0 +1,214 @@
+# Seata TCC 模式学习演示 - Cursor Rules
+
+## 项目结构规范
+
+### 包命名规范
+- 所有测试演示包使用 `simple_xxx_demo_01` 格式
+- 包名必须与目录结构一致，避免 `test.java.` 前缀
+- 配置类统一命名为 `XxxConfig.java`
+
+### 文件组织
+```
+simple_tcc_demo_01/
+├── config/
+│   └── TccConfig.java              # 统一配置类
+├── service/
+│   ├── XxxTccService.java          # TCC 接口
+│   └── XxxTccServiceImpl.java      # TCC 实现类
+├── DatabaseInitializer.java        # 数据库自动初始化
+├── XxxTest.java                    # 测试类
+└── setup_database.sql              # 手动数据库初始化脚本
+```
+
+## Java 版本兼容性
+
+### 必须避免的 Java 8 不兼容语法
+- ❌ 文本块（Text Blocks）：`"""..."""`
+- ❌ `String.repeat(int)` 方法
+- ❌ `var` 关键字
+- ❌ Switch 表达式：`switch ->`
+- ❌ Pattern matching for instanceof
+
+### 兼容性替代方案
+```java
+// ❌ 错误：文本块
+String sql = """
+    CREATE TABLE account (
+        id INT PRIMARY KEY
+    )
+    """;
+
+// ✅ 正确：字符串拼接
+String sql = "CREATE TABLE account (" +
+    "id INT PRIMARY KEY" +
+    ")";
+
+// ❌ 错误：String.repeat()
+String line = "=".repeat(50);
+
+// ✅ 正确：硬编码字符串
+String line = "==================================================";
+```
+
+## TCC 模式实现规范
+
+### 接口定义
+```java
+@LocalTCC
+public interface XxxTccService {
+    @TwoPhaseBusinessAction(
+        name = "businessActionName", 
+        commitMethod = "confirm", 
+        rollbackMethod = "cancel"
+    )
+    boolean tryMethod(参数列表);
+    
+    boolean confirm(BusinessActionContext context);
+    boolean cancel(BusinessActionContext context);
+}
+```
+
+### 实现类规范
+- Try 阶段：只做资源预留，不真正执行业务
+- Confirm 阶段：真正执行业务逻辑
+- Cancel 阶段：释放 Try 阶段预留的资源
+- 所有方法必须保证幂等性
+- 使用 `BusinessActionContext` 获取参数
+
+### 关键注解
+- `@LocalTCC`：标识 TCC 接口
+- `@TwoPhaseBusinessAction`：定义两阶段业务动作
+- `@GlobalTransactional`：在测试方法上使用
+
+## 数据库配置规范
+
+### 数据源配置
+```java
+@Bean
+@Primary
+public DataSource dataSource() {
+    DriverManagerDataSource ds = new DriverManagerDataSource();
+    ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+    ds.setUrl("jdbc:mysql://127.0.0.1:3306/数据库名?...");
+    ds.setUsername("root");
+    ds.setPassword("mysql123");
+    
+    // 关键：使用 DataSourceProxy 包装
+    return new DataSourceProxy(ds, "mysql");
+}
+```
+
+### 数据库命名规范
+- TCC 测试数据库：`seata_tcct_YYYYMMDD`
+- AT 测试数据库：`seata_test_YYYYMMDD`
+- 库存测试数据库：`seata_inventory_test`
+
+## 测试类规范
+
+### 自动初始化模式
+```java
+@BeforeEach
+void setUp() {
+    System.out.println("\n==================================================");
+    System.out.println("开始执行测试前初始化");
+    
+    // 自动初始化数据库
+    databaseInitializer.initializeDatabase();
+    
+    // 清理测试状态
+    service.clearFrozenRecords();
+    
+    System.out.println("测试前初始化完成");
+    System.out.println("==================================================");
+}
+```
+
+### 测试场景覆盖
+- ✅ 成功场景：Try-Confirm 流程
+- ✅ 回滚场景：Try-Cancel 流程
+- ✅ 异常处理：各种异常情况
+- ✅ 幂等性测试：重复调用
+- ✅ 边界条件：余额不足、账户不存在等
+
+## 数据库初始化规范
+
+### 自动初始化类
+- 创建 `DatabaseInitializer` 类处理数据库初始化
+- 在 `@BeforeEach` 方法中自动调用
+- 包含数据库创建、表创建、数据插入、验证等步骤
+
+### SQL 脚本规范
+- 使用 `CREATE DATABASE IF NOT EXISTS`
+- 使用 `CREATE TABLE IF NOT EXISTS`
+- 使用 `REPLACE INTO` 或 `INSERT IGNORE` 插入测试数据
+- 包含必要的索引和约束
+
+## 配置管理规范
+
+### 统一配置类
+- 避免创建多个重复的配置类
+- 将相关配置合并到一个 `XxxConfig.java` 中
+- 使用 `@Primary` 注解标识主要配置
+
+### Seata 配置
+```java
+@Bean
+@Primary
+public GlobalTransactionScanner globalTransactionScanner() {
+    return new GlobalTransactionScanner("应用名", "事务组名");
+}
+```
+
+## 开发流程规范
+
+### 创建新演示项目时
+1. 创建包结构：`simple_xxx_demo_01`
+2. 创建配置类：`XxxConfig.java`
+3. 创建 TCC 接口和实现类
+4. 创建 `DatabaseInitializer` 类
+5. 创建测试类，包含 `@BeforeEach` 自动初始化
+6. 创建 SQL 初始化脚本
+7. 确保 Java 8 兼容性
+
+### 提交代码时
+- 使用有意义的提交信息
+- 包含功能描述和修复说明
+- 确保所有文件都正确提交
+
+## 常见问题预防
+
+### 编译错误预防
+- 检查 Java 版本兼容性
+- 避免使用新版本 Java 特性
+- 使用字符串拼接替代文本块
+
+### 运行时错误预防
+- 确保数据库连接配置正确
+- 检查表结构是否完整
+- 验证测试数据是否正确插入
+
+### 包名错误预防
+- 包名必须与目录结构一致
+- 避免使用 `test.java.` 前缀
+- 导入语句必须与包名匹配
+
+## 学习要点总结
+
+### TCC 模式核心概念
+- **Try**：尝试执行，预留资源
+- **Confirm**：确认执行，提交资源
+- **Cancel**：取消执行，释放资源
+- **幂等性**：每个方法都可能被多次调用
+- **业务补偿**：通过业务逻辑实现事务补偿
+
+### 与 AT 模式的区别
+- TCC 需要手动实现 Try-Confirm-Cancel
+- TCC 提供更精确的业务控制
+- TCC 适用于复杂业务场景
+- AT 模式更简单，适用于大部分 CRUD 操作
+
+### 最佳实践
+- 在 Try 阶段只做资源预留
+- 确保所有方法的幂等性
+- 合理处理异常情况
+- 使用数据库记录 TCC 状态（生产环境）
