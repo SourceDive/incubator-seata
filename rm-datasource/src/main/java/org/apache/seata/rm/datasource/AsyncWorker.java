@@ -51,7 +51,10 @@ import static org.apache.seata.core.constants.ConfigurationKeys.CLIENT_ASYNC_COM
 
 /**
  * The type Async worker.
- *
+ * <p></p>
+ * 二阶段任务的添加、执行
+ * @see AsyncWorker#addToCommitQueue(Phase2Context)
+ * @see AsyncWorker#doBranchCommitSafely()
  */
 public class AsyncWorker {
 
@@ -98,6 +101,7 @@ public class AsyncWorker {
     }
 
     /**
+     * <p>二阶段任务的添加。</p>
      * try add context to commitQueue directly, if fail(which means the queue is full),
      * then doBranchCommit urgently(so that the queue could be empty again) and retry this process.
      */
@@ -117,6 +121,7 @@ public class AsyncWorker {
         }
     }
 
+    // 二阶段任务的执行。
     void doBranchCommitSafely() {
         try {
             doBranchCommit();

@@ -106,12 +106,15 @@ public class DataSourceManager extends AbstractResourceManager {
         return (DataSourceProxy) dataSourceCache.get(resourceId);
     }
 
+    // 对低风险操作进行异步化以提升效率，对高风险操作进行同步化以保障安全。
+    // 异步处理提交(异步线程)。
     @Override
     public BranchStatus branchCommit(BranchType branchType, String xid, long branchId, String resourceId,
                                      String applicationData) throws TransactionException {
         return asyncWorker.branchCommit(xid, branchId, resourceId);
     }
 
+    // 同步处理回滚(当前线程)。
     @Override
     public BranchStatus branchRollback(BranchType branchType, String xid, long branchId, String resourceId,
                                        String applicationData) throws TransactionException {
