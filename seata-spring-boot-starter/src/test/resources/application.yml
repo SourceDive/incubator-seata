@@ -26,9 +26,9 @@ seata:
     tm:
       commit-retry-count: 5
       rollback-retry-count: 5
-      default-global-transaction-timeout: 60000
-      default-global-transaction-retry-timeout: 60000
-      default-global-transaction-lock-retry-timeout: 60000
+      default-global-transaction-timeout: 180000
+      default-global-transaction-retry-timeout: 180000
+      default-global-transaction-lock-retry-timeout: 180000
       default-global-transaction-lock-retry-policy-branch-rollback-on-conflict: true
   log:
     exception-rate: 100

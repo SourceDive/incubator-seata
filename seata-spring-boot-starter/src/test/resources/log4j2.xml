@@ -7,7 +7,7 @@
     </Appenders>
     <Loggers>
         <!-- Seata 日志级别 - 使用正确的包名 -->
-        <Logger name="org.apache.seata" level="error" additivity="false">
+        <Logger name="org.apache.seata" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         
