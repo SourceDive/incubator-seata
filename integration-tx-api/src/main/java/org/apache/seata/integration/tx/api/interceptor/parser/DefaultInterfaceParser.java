@@ -50,6 +50,7 @@ public class DefaultInterfaceParser implements InterfaceParser {
      * init parsers
      */
     protected void initInterfaceParser() {
+        // 也是拿资源加载器去加载的。
         List<InterfaceParser> interfaceParsers = EnhancedServiceLoader.loadAll(InterfaceParser.class);
         if (CollectionUtils.isNotEmpty(interfaceParsers)) {
             ALL_INTERFACE_PARSERS.addAll(interfaceParsers);
@@ -100,7 +101,7 @@ public class DefaultInterfaceParser implements InterfaceParser {
 
     @Override
     public IfNeedEnhanceBean parseIfNeedEnhancement(Class<?> beanClass) {
-        // 拿所有事务模式的parse，挨个去parse
+        // 拿所有事务模式的parser，挨个去parse
         for (InterfaceParser interfaceParser : ALL_INTERFACE_PARSERS) {
             IfNeedEnhanceBean ifNeedEnhanceBean = interfaceParser.parseIfNeedEnhancement(beanClass);
             if (ifNeedEnhanceBean.isIfNeed()) {
