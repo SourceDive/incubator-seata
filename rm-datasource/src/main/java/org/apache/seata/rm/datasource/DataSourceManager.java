@@ -47,6 +47,7 @@ public class DataSourceManager extends AbstractResourceManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceManager.class);
 
+    // 这个类中只有二阶段提交的任务，它会来做，它只做这个。
     private final AsyncWorker asyncWorker = new AsyncWorker(this);
 
     private final Map<String, Resource> dataSourceCache = new ConcurrentHashMap<>();

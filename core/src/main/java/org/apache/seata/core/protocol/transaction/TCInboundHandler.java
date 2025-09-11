@@ -19,6 +19,7 @@ package org.apache.seata.core.protocol.transaction;
 import org.apache.seata.core.rpc.RpcContext;
 
 /**
+ * <p>TC进行接收。</p>
  * The interface Tc inbound handler.
  *
  */

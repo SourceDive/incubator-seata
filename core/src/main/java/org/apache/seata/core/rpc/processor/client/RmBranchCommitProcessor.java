@@ -55,6 +55,7 @@ public class RmBranchCommitProcessor implements RemotingProcessor {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("rm client handle branch commit process:" + msg);
         }
+        // 二阶段任务添加入口。
         handleBranchCommit(rpcMessage, remoteAddress, (BranchCommitRequest) msg);
     }
 

@@ -33,11 +33,14 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.collect.Lists;
+import io.netty.channel.ChannelHandlerContext;
 import org.apache.seata.common.thread.NamedThreadFactory;
 import org.apache.seata.common.util.IOUtil;
 import org.apache.seata.common.util.StringUtils;
 import org.apache.seata.config.ConfigurationFactory;
 import org.apache.seata.core.model.BranchStatus;
+import org.apache.seata.core.protocol.RpcMessage;
+import org.apache.seata.core.rpc.processor.client.RmBranchCommitProcessor;
 import org.apache.seata.rm.datasource.undo.UndoLogManager;
 import org.apache.seata.rm.datasource.undo.UndoLogManagerFactory;
 import org.slf4j.Logger;
@@ -59,10 +62,15 @@ public class AsyncWorker {
     private static final int UNDOLOG_DELETE_LIMIT_SIZE = 1000;
 
     private static final int ASYNC_COMMIT_BUFFER_LIMIT = ConfigurationFactory.getInstance().getInt(
-        CLIENT_ASYNC_COMMIT_BUFFER_LIMIT, DEFAULT_CLIENT_ASYNC_COMMIT_BUFFER_LIMIT);
+            CLIENT_ASYNC_COMMIT_BUFFER_LIMIT, DEFAULT_CLIENT_ASYNC_COMMIT_BUFFER_LIMIT);
 
     private final DataSourceManager dataSourceManager;
 
+    /**
+     * <p>二阶段任务队列</p>
+     * 添加入口
+     * @see RmBranchCommitProcessor#process(ChannelHandlerContext, RpcMessage)
+     */
     private final BlockingQueue<Phase2Context> commitQueue;
 
     private final ScheduledExecutorService scheduledExecutor;
@@ -81,6 +89,8 @@ public class AsyncWorker {
         scheduledExecutor.scheduleAtFixedRate(this::doBranchCommitSafely, 10, 1000, TimeUnit.MILLISECONDS);
     }
 
+    // 分支事务提交。
+    // 添加到任务队列后，直接返回[二阶段已提交]信号。
     public BranchStatus branchCommit(String xid, long branchId, String resourceId) {
         Phase2Context context = new Phase2Context(xid, branchId, resourceId);
         addToCommitQueue(context);

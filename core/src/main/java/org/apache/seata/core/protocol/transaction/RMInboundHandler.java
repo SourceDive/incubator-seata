@@ -17,12 +17,14 @@
 package org.apache.seata.core.protocol.transaction;
 
 /**
+ * <p>TC发起调用，RM进行接收。</p>
  * The interface Rm inbound handler.
  *
  */
 public interface RMInboundHandler {
 
     /**
+     * <p>处理分支事务提交。</p>
      * Handle branch commit response.
      *
      * @param request the request

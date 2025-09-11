@@ -317,6 +317,7 @@ public abstract class AbstractUndoLogManager implements UndoLogManager {
                 conn = connectionProxy.getTargetConnection();
                 originalAutoCommit = conn.getAutoCommit();
 
+                // ===>边界：本地事务开启。
                 // The entire undo process should run in a local transaction.
                 if (originalAutoCommit) {
                     conn.setAutoCommit(false);
@@ -435,7 +436,7 @@ public abstract class AbstractUndoLogManager implements UndoLogManager {
                     }
                     if (conn != null) {
                         if (originalAutoCommit) {
-                            conn.setAutoCommit(true);
+                            conn.setAutoCommit(true); // ===>边界：本地事务结束。
                         }
                         connectionProxy.close();
                     }

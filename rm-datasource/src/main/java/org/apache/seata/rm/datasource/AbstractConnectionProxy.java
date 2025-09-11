@@ -44,7 +44,8 @@ import java.util.concurrent.Executor;
 
 /**
  * The type Abstract connection proxy.
- *
+ * <p>所有原始连接的行为，代理连接全部都有。</p>
+ * <p>接收后转发给代理连接。</p>
  */
 public abstract class AbstractConnectionProxy implements Connection {
 
