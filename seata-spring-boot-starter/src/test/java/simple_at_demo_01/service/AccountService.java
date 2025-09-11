@@ -1,4 +1,4 @@
-package simple_seata_demo_01.service;
+package simple_at_demo_01.service;
 
 import org.apache.seata.core.context.RootContext;
 import org.apache.seata.spring.annotation.GlobalTransactional;

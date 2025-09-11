@@ -1,4 +1,4 @@
-package simple_seata_demo_01.config;
+package simple_at_demo_01.config;
 
 import org.apache.seata.rm.datasource.DataSourceProxy;
 import org.apache.seata.spring.annotation.GlobalTransactionScanner;
@@ -14,7 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan("simple_seata_demo_01.service") // 扫描service包
+@ComponentScan("simple_at_demo_01.service") // 扫描service包
 public class TestConfig {
     
     // 第一个数据源 - 账户服务数据库

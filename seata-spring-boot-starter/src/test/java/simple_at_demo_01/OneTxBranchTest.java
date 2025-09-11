@@ -1,6 +1,6 @@
 // 文件路径：seata-spring-boot-starter/src/test/java/io/seata/spring/boot/autoconfigure/SeataH2DemoTest.java
 
-package simple_seata_demo_01;
+package simple_at_demo_01;
 
 import org.apache.seata.core.context.RootContext;
 import org.apache.seata.rm.datasource.undo.UndoLogManager;
@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import simple_seata_demo_01.config.TestConfig;
-import simple_seata_demo_01.service.AccountService;
+import simple_at_demo_01.config.TestConfig;
+import simple_at_demo_01.service.AccountService;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;

@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import simple_tcc_demo_01.config.TccConfig;
 import simple_tcc_demo_01.service.SimpleTccService;
+import simple_tcc_demo_01.DatabaseInitializer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,17 +28,22 @@ class SimpleTccTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private DatabaseInitializer databaseInitializer;
+
     @BeforeEach
     void setUp() {
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("开始执行测试前初始化");
+        
+        // 初始化数据库
+        databaseInitializer.initializeDatabase();
+        
         // 清理测试数据
         simpleTccService.clearFrozenRecords();
         
-        // 初始化账户数据
-        jdbcTemplate.execute("REPLACE INTO account VALUES (1, 'UserA', 1000)");
-        jdbcTemplate.execute("REPLACE INTO account VALUES (2, 'UserB', 1000)");
-        jdbcTemplate.execute("REPLACE INTO account VALUES (3, 'UserC', 500)");
-        
-        System.out.println("=== 测试数据初始化完成 ===");
+        System.out.println("测试前初始化完成");
+        System.out.println("=".repeat(50));
     }
 
     @Test

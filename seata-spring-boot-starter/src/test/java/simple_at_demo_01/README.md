@@ -5,7 +5,7 @@
 ## 项目结构
 
 ```
-simple_seata_demo_01/
+simple_at_demo_01/
 ├── config/
 │   └── TestConfig.java          # 配置两个数据源
 ├── service/

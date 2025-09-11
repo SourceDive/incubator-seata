@@ -1,4 +1,4 @@
-package simple_seata_demo_01;
+package simple_at_demo_01;
 
 import org.apache.seata.core.context.RootContext;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import simple_seata_demo_01.config.TestConfig;
-import simple_seata_demo_01.service.OrderService;
+import simple_at_demo_01.config.TestConfig;
+import simple_at_demo_01.service.OrderService;
 
 import java.util.concurrent.TimeUnit;
 
