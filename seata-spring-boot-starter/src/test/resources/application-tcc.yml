@@ -12,7 +12,22 @@ seata:
     type: file
   registry:
     type: file
-  data-source-proxy-mode: AT
+  # TCC 模式下的数据源代理模式配置说明：
+  # 
+  # 选项1: NONE - 推荐用于纯 TCC 模式
+  #   - 不使用数据源代理，直接使用原始数据库连接
+  #   - TCC 完全通过业务逻辑实现事务补偿
+  #   - 不依赖 AT 模式的 UNDO_LOG 机制
+  #   - 性能更好，但需要手动管理 XID 传播
+  #
+  # 选项2: AT - 适用于混合模式
+  #   - 使用数据源代理，支持 AT 模式的自动回滚
+  #   - 可以同时使用 TCC 和 AT 模式
+  #   - 自动处理 XID 传播和连接管理
+  #   - 适合需要两种模式并存的场景
+  #
+  # 当前配置：NONE（纯 TCC 模式）
+  data-source-proxy-mode: NONE
   client:
     rm:
       async-commit-buffer-limit: 10000
