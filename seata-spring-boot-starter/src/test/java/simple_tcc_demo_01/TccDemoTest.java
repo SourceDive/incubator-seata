@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 演示最简单的 TCC 模式使用
  */
 @DisplayName("TCC 模式演示测试")
-@SpringBootTest(classes = {TccConfig.class})
+@SpringBootTest(classes = {TccConfig.class, DatabaseInitializer.class})
 class TccDemoTest {
 
     @Autowired

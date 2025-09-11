@@ -3,6 +3,7 @@ package simple_tcc_demo_01.config;
 // 注意：TCC 模式下不需要 DataSourceProxy
 import org.apache.seata.spring.annotation.GlobalTransactionScanner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,6 +34,7 @@ import javax.sql.DataSource;
  *    - 更精确的业务控制
  */
 @Configuration
+@ComponentScan(basePackages = "simple_tcc_demo_01.service")
 public class TccConfig {
 
     /**
@@ -46,7 +48,7 @@ public class TccConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/seata_tcct_20250911?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true");
+        dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/seata_tcc_20250911?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true");
         dataSource.setUsername("root");
         dataSource.setPassword("mysql123");
 

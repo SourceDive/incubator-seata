@@ -2,7 +2,7 @@
 -- 数据库名称: seata_tcct_20250911
 
 -- 创建数据库
-CREATE DATABASE IF NOT EXISTS seata_tcct_20250911 
+CREATE DATABASE IF NOT EXISTS seata_tcc_20250911
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;
 

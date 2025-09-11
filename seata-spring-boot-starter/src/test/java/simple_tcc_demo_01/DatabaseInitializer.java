@@ -54,11 +54,11 @@ public class DatabaseInitializer {
      * 创建数据库
      */
     private void createDatabase() {
-        System.out.println("创建数据库: seata_tcct_20250911");
+        System.out.println("创建数据库: seata_tcc_20250911");
         
         // 注意：这里需要先连接到默认数据库来创建目标数据库
         try {
-            jdbcTemplate.execute("CREATE DATABASE IF NOT EXISTS seata_tcct_20250911 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+            jdbcTemplate.execute("CREATE DATABASE IF NOT EXISTS seata_tcc_20250911 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
             System.out.println("✅ 数据库创建成功");
         } catch (Exception e) {
             System.out.println("⚠️ 数据库可能已存在: " + e.getMessage());
@@ -129,12 +129,12 @@ public class DatabaseInitializer {
         
         // 检查表是否存在
         Integer accountCount = jdbcTemplate.queryForObject(
-            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'seata_tcct_20250911' AND table_name = 'account'", 
+            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'seata_tcc_20250911' AND table_name = 'account'",
             Integer.class
         );
         
         Integer tccRecordCount = jdbcTemplate.queryForObject(
-            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'seata_tcct_20250911' AND table_name = 'tcc_record'", 
+            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'seata_tcc_20250911' AND table_name = 'tcc_record'",
             Integer.class
         );
         
