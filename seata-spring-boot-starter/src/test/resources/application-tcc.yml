@@ -1,8 +1,8 @@
 # Seata 配置 - 使用MySQL数据库
 seata:
   enabled: true
-  application-id: tcc_demo_01
-  tx-service-group: tcc_demo_01_group
+  application-id: seata-test
+  tx-service-group: my_test_tx_group
   service:
     vgroup-mapping:
       my_test_tx_group: default
@@ -37,6 +37,6 @@ seata:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/seata_test_20250804?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1:3306/seata_tcc_20250911?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: mysql123

@@ -71,6 +71,6 @@ public class TccConfig {
     @Bean
     @Primary
     public GlobalTransactionScanner globalTransactionScanner() {
-        return new GlobalTransactionScanner("tcc-test", "tcc_test_tx_group");
+        return new GlobalTransactionScanner("seata-test", "my_test_tx_group");
     }
 }
