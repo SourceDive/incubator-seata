@@ -25,6 +25,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>1、只作用于方法上。</p>
+ * <p>2、标识在 try 方法上。</p>
+ * <p>3、所在类必须被 @LocalTCC修饰</p>
  * TCC annotation.
  * Define a TCC interface, which added on the try method.
  * Must be used with `@LocalTCC`.
@@ -42,6 +45,7 @@ import java.lang.annotation.Target;
 public @interface TwoPhaseBusinessAction {
 
     /**
+     * <p>tcc bean名称，必须唯一。</p>
      * TCC bean name, must be unique
      *
      * @return the string

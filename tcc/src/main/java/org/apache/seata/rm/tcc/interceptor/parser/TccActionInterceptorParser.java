@@ -87,6 +87,10 @@ public class TccActionInterceptorParser implements InterfaceParser {
         return TwoPhaseBusinessAction.class;
     }
 
+    /**
+     * 返回一个 TCCResource
+     * 1、开发者定义的 tcc bean 名称不能为空
+     */
     protected Resource createResource(Object target, Class<?> targetServiceClass, Method m, Annotation annotation) throws NoSuchMethodException {
         TwoPhaseBusinessAction twoPhaseBusinessAction = (TwoPhaseBusinessAction) annotation;
         TCCResource tccResource = new TCCResource();
