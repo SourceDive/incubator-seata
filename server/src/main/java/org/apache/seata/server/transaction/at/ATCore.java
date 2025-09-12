@@ -102,6 +102,7 @@ public class ATCore extends AbstractCore {
         return lockManager.isLockable(xid, resourceId, lockKeys);
     }
 
+    // 向 RM 发送分支事务提交请求。
     @Override
     public BranchStatus branchDelete(GlobalSession globalSession, BranchSession branchSession) throws TransactionException {
         // AT mode use branch commit to delete undo log

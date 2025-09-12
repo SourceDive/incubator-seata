@@ -48,7 +48,7 @@ public class TransactionalTemplate {
     /**
      * Execute object.
      *
-     * @param business the business 业务逻辑
+     * @param business the business 事务信息及业务逻辑调用入口。
      * @return the object
      * @throws TransactionalExecutor.ExecutionException the execution exception
      */

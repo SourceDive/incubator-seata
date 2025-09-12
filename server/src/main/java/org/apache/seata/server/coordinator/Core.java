@@ -23,6 +23,10 @@ import org.apache.seata.server.session.GlobalSession;
 
 /**
  * The interface Core.
+ * <ul>1、全局提交</ul>
+ * <ul>2、全局回滚</ul>
+ * <ul>3、全局汇报?</ul>
+ * <ul>4、分支事务删除</ul>
  *
  */
 public interface Core extends TransactionCoordinatorInbound, TransactionCoordinatorOutbound {
