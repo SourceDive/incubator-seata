@@ -39,7 +39,7 @@ public class SimpleTccService {
         rollbackMethod = "cancelTransfer"
     )
     public boolean tryTransfer(String fromAccountId, String toAccountId, int amount) {
-        System.out.println("=== Try 阶段：准备转账 ===");
+        System.out.println("===> Try 阶段：准备转账 ===");
         System.out.println("从账户: " + fromAccountId + " 到账户: " + toAccountId + " 金额: " + amount);
         
         try {
@@ -90,7 +90,7 @@ public class SimpleTccService {
      * Confirm 阶段：真正执行转账
      */
     public boolean confirmTransfer(BusinessActionContext context) {
-        System.out.println("=== Confirm 阶段：执行转账 ===");
+        System.out.println("===> Confirm 阶段：执行转账 ===");
         
         try {
             // 从上下文中获取参数
@@ -141,7 +141,7 @@ public class SimpleTccService {
      * Cancel 阶段：解冻转出账户金额
      */
     public boolean cancelTransfer(BusinessActionContext context) {
-        System.out.println("=== Cancel 阶段：取消转账 ===");
+        System.out.println("===> Cancel 阶段：取消转账 ===");
         
         try {
             // 从上下文中获取参数

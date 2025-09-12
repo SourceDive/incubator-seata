@@ -24,7 +24,7 @@ public class AccountTccServiceImpl implements AccountTccService {
 
     @Override
     public boolean tryDeduct(String accountId, int amount) {
-        System.out.println("=== Try 阶段：冻结账户金额 ===");
+        System.out.println("===> Try 阶段：冻结账户金额 ===");
         System.out.println("账户ID: " + accountId + ", 金额: " + amount);
         
         try {
@@ -74,7 +74,7 @@ public class AccountTccServiceImpl implements AccountTccService {
 
     @Override
     public boolean confirm(BusinessActionContext context) {
-        System.out.println("=== Confirm 阶段：真正扣款 ===");
+        System.out.println("===> Confirm 阶段：真正扣款 ===");
         
         try {
             // 从上下文中获取参数
@@ -125,39 +125,35 @@ public class AccountTccServiceImpl implements AccountTccService {
 
     @Override
     public boolean cancel(BusinessActionContext context) {
-        System.out.println("=== Cancel 阶段：解冻金额 ===");
+        System.out.println("===> Cancel 阶段：解冻金额 ===");
         
         try {
             // 从上下文中获取参数
-            String accountId = (String) context.getActionContext("accountId");
-            Integer amount = (Integer) context.getActionContext("amount");
+            String inputAccountId = (String) context.getActionContext("accountId");
+            Integer inputAmount = (Integer) context.getActionContext("amount");
             String xid = context.getXid();
             
-            System.out.println("账户ID: " + accountId + ", 解冻金额: " + amount + ", XID: " + xid);
+            System.out.println("账户ID: " + inputAccountId + ", 解冻金额: " + inputAmount + ", XID: " + xid);
             
             // 1. 查找对应的 TCC 记录
-            Integer recordAmount = jdbcTemplate.queryForObject(
+            Integer tccRecordAmount = jdbcTemplate.queryForObject(
                 "SELECT amount FROM tcc_record WHERE xid = ? AND account_id = ? AND status = 'TRY'",
-                Integer.class, xid, accountId
+                Integer.class, xid, inputAccountId
             );
-            
-            if (recordAmount == null || !recordAmount.equals(amount)) {
+
+            if (inputAmount == null || tccRecordAmount.intValue() !=  inputAmount.intValue()) {
                 System.out.println("❌ 未找到对应的 TCC 记录或金额不匹配");
                 return false;
             }
-            
+
             // 2. 更新 TCC 记录状态为 CANCEL（解冻）
-            int updated = jdbcTemplate.update(
-                "UPDATE tcc_record SET status = 'CANCEL' WHERE xid = ? AND account_id = ? AND status = 'TRY'",
-                xid, accountId
-            );
-            
+            int updated = updateStatusToCancel(xid, inputAccountId);
             if (updated == 0) {
                 System.out.println("❌ TCC 记录状态更新失败");
                 return false;
             }
             
-            System.out.println("✅ 金额解冻成功，解冻金额: " + amount);
+            System.out.println("✅ 金额解冻成功，解冻金额: " + inputAmount);
             return true;
             
         } catch (Exception e) {
@@ -166,7 +162,15 @@ public class AccountTccServiceImpl implements AccountTccService {
             return false;
         }
     }
-    
+
+    private int updateStatusToCancel(String xid, String accountId) {
+        int updated = jdbcTemplate.update(
+            "UPDATE tcc_record SET status = 'CANCEL' WHERE xid = ? AND account_id = ? AND status = 'TRY'",
+                xid, accountId
+        );
+        return updated;
+    }
+
     /**
      * 获取当前冻结的金额（用于测试）<br>
      * 从数据库查询 TRY 状态的记录

@@ -22,11 +22,7 @@ public interface AccountTccService {
      * @param amount 金额
      * @return 是否成功
      */
-    @TwoPhaseBusinessAction(
-        name = "accountTcc", 
-        commitMethod = "confirm", 
-        rollbackMethod = "cancel"
-    )
+    @TwoPhaseBusinessAction(name = "accountTcc")
     boolean tryDeduct(String accountId, int amount);
 
     /**

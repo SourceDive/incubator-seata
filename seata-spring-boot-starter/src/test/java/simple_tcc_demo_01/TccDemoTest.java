@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import simple_tcc_demo_01.config.TccConfig;
-import simple_tcc_demo_01.service.AccountTccService;
+import simple_tcc_demo_01.service.EntryService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TccDemoTest {
 
     @Autowired
-    private AccountTccService accountTccService;
+    private EntryService accountTccService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -47,7 +47,6 @@ class TccDemoTest {
 
     @Test
     @DisplayName("测试 TCC 成功场景")
-    @GlobalTransactional
     void testTccSuccess() {
         System.out.println("\n=== 测试 TCC 成功场景 ===");
 
