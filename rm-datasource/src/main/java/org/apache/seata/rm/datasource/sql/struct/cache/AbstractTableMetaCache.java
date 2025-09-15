@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <p>用的caffeine缓存。</p>
  * The type Table meta cache.
  *
  */

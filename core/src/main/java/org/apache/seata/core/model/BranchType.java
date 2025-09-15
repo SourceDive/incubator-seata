@@ -24,12 +24,14 @@ package org.apache.seata.core.model;
 public enum BranchType {
 
     /**
+     * <p>自动模式。</p>
      * The At.
      */
     // AT Branch
     AT,
     
     /**
+     * <p>手动模式。</p>
      * The TCC.
      */
     TCC,

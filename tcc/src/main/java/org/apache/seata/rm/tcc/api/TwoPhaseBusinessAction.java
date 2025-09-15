@@ -53,6 +53,7 @@ public @interface TwoPhaseBusinessAction {
     String name();
 
     /**
+     * <p>开发者可以自定义 commit 方法的名称。</p>
      * commit method name
      *
      * @return the string
@@ -60,6 +61,7 @@ public @interface TwoPhaseBusinessAction {
     String commitMethod() default "commit";
 
     /**
+     * <p>开发者可以自定义 rollback 方法的名称。</p>
      * rollback method name
      *
      * @return the string

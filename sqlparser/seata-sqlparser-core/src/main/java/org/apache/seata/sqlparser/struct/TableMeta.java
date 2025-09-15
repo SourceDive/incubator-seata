@@ -33,6 +33,7 @@ import org.apache.seata.common.util.LowerCaseLinkHashMap;
 import org.apache.seata.sqlparser.util.ColumnUtils;
 
 /**
+ * <p>表的元信息。</p>
  * The type Table meta.
  *
  */
@@ -49,6 +50,7 @@ public class TableMeta {
     private final Map<String, ColumnMeta> allColumns = new LowerCaseLinkHashMap<>();
 
     /**
+     * <p>索引的元信息。</p>
      * key: index name
      */
     private final Map<String, IndexMeta> allIndexes = new LowerCaseLinkHashMap<>();

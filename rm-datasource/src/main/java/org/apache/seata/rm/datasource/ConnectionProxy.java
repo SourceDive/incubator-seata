@@ -104,6 +104,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
     }
 
     /**
+     * <p>检查全局锁。</p>
      * Check lock.
      *
      * @param lockKeys the lockKeys
@@ -117,6 +118,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
         try {
             boolean lockable = DefaultResourceManager.get().lockQuery(BranchType.AT,
                 getDataSourceProxy().getResourceId(), context.getXid(), lockKeys);
+            // 锁已被占用
             if (!lockable) {
                 throw new LockConflictException(String.format("get lock failed, lockKey: %s",lockKeys));
             }
@@ -226,11 +228,14 @@ public class ConnectionProxy extends AbstractConnectionProxy {
 
 
     private void doCommit() throws SQLException {
+        // 参与了全局事务
         if (context.inGlobalTransaction()) {
             processGlobalTransactionCommit();
         } else if (context.isGlobalLockRequire()) {
+            // 没有参与全局事务，但有全局锁
             processLocalCommitWithGlobalLocks();
         } else {
+            // 普通提交
             targetConnection.commit();
         }
     }
@@ -261,14 +266,14 @@ public class ConnectionProxy extends AbstractConnectionProxy {
             targetConnection.commit(); // 此句执行完毕后，本地事务结束。
         } catch (Throwable ex) {
             LOGGER.error("process connectionProxy commit error: {}", ex.getMessage(), ex);
-            report(false);
+            report(false); // 上报：失败
             throw new SQLException(ex);
         }
-        // 分支上报TC。一阶段结束。
+        // 上报分支事务状态成功到TC。一阶段结束。
         if (IS_REPORT_SUCCESS_ENABLE) {
             report(true);
         }
-        // 重置 context，各种属性都销去。
+        // 重置事务上下文，各种属性都销去。
         context.reset();
     }
 
@@ -281,6 +286,7 @@ public class ConnectionProxy extends AbstractConnectionProxy {
         Long branchId = DefaultResourceManager.get().branchRegister(BranchType.AT, getDataSourceProxy().getResourceId(),
             null, context.getXid(), context.getApplicationData(),
             context.buildLockKeys());
+        // 上下文设置分支事务id
         context.setBranchId(branchId);
     }
 

@@ -64,6 +64,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
     // 数据库类型
     private String dbType;
 
+    // 给 Oracle 数据库使用的。
     private String userName;
 
     private String kernelVersion;
@@ -129,6 +130,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
         }
         // 为 DataSourceProxy 设置 resourceid，是从 jdbcurl 中获取的。
         initResourceId();
+        // 注册到资源管理器。
         DefaultResourceManager.get().registerResource(this);
         TableMetaCacheFactory.registerTableMeta(this);
         //Set the default branch type to 'AT' in the RootContext.

@@ -89,8 +89,10 @@ public abstract class AbstractResourceManager implements ResourceManager {
             }
             return response.getBranchId();
         } catch (TimeoutException toe) {
+            // RPC超时
             throw new RmTransactionException(TransactionExceptionCode.IO, "branch register timeout, xid:" + xid, toe);
         } catch (RuntimeException rex) {
+            // 运行时异常
             throw new RmTransactionException(TransactionExceptionCode.BranchRegisterFailed,
                 "branch register exception, xid:" + xid, rex);
         }

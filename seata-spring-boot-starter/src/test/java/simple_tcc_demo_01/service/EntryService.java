@@ -15,7 +15,7 @@ public class EntryService {
     @Autowired
     private AccountTccService accountTccService;
 
-    @GlobalTransactional(rollbackFor = Exception.class)
+    @GlobalTransactional(rollbackFor = Exception.class) // 声明事务边界。
     public boolean tryDeduct(String accountId, int amount) {
         // 执行 TCC 扣款
         return accountTccService.tryDeduct(accountId, amount);

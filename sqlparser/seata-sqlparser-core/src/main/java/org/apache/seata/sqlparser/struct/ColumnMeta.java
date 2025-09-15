@@ -19,6 +19,7 @@ package org.apache.seata.sqlparser.struct;
 import java.util.Objects;
 
 /**
+ * <p>列的元信息。</p>
  * The type Column meta.
  *
  */

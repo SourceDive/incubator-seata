@@ -23,6 +23,7 @@ import java.util.Objects;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
+ * <p>索引的元信息。</p>
  * The type Index meta.
  *
  */

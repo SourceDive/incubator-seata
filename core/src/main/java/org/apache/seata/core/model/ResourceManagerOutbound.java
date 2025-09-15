@@ -42,6 +42,7 @@ public interface ResourceManagerOutbound {
         TransactionException;
 
     /**
+     * <p>上报分支事务状态。</p>
      * Branch report.
      *
      * @param branchType      the branch type
@@ -54,7 +55,7 @@ public interface ResourceManagerOutbound {
     void branchReport(BranchType branchType, String xid, long branchId, BranchStatus status, String applicationData) throws TransactionException;
 
     /**
-     * <p>查询是否可以获取锁。</p>
+     * <p>查询全局锁。</p>
      * Lock query boolean.
      *
      * @param branchType the branch type
