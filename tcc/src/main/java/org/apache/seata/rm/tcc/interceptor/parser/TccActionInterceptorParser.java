@@ -100,6 +100,7 @@ public class TccActionInterceptorParser implements InterfaceParser {
         tccResource.setActionName(twoPhaseBusinessAction.name());
         tccResource.setTargetBean(target);
         tccResource.setPrepareMethod(m);
+        // 这里会根据你tccbean中定义的名称去找对应的二阶段方法，所以名称和方法要对应上。
         tccResource.setCommitMethodName(twoPhaseBusinessAction.commitMethod());
         tccResource.setCommitMethod(targetServiceClass.getMethod(twoPhaseBusinessAction.commitMethod(),
                 twoPhaseBusinessAction.commitArgsClasses()));
