@@ -93,6 +93,7 @@ public class LocalTCCRemotingParser extends AbstractedRemotingParser {
     }
 
     private boolean isLocalTCC(Class<?> classType) {
+        // 获取类实现的接口集合。
         Set<Class<?>> interfaceClasses = ReflectionUtil.getInterfaces(classType);
         for (Class<?> interClass : interfaceClasses) {
             if (interClass.isAnnotationPresent(LocalTCC.class)) {

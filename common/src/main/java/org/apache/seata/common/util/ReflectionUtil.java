@@ -152,6 +152,8 @@ public final class ReflectionUtil {
     //region Interface
 
     /**
+     * <p>获取类实现的接口集合。</p>
+     * <p>没有实现接口，返回空集合。</p>
      * get all interface of the clazz
      *
      * @param clazz the clazz

@@ -28,6 +28,7 @@ import org.apache.seata.common.util.CollectionUtils;
 import org.apache.seata.integration.tx.api.interceptor.handler.ProxyInvocationHandler;
 
 /**
+ * 这个 parse 是入口，相当于管理者。
  */
 public class DefaultInterfaceParser implements InterfaceParser {
 

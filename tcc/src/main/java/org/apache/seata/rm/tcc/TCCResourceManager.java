@@ -137,6 +137,7 @@ public class TCCResourceManager extends AbstractResourceManager {
                     throw e.getCause();
                 }
             } else {
+                // 触发开发者定义的 confirm 方法
                 ret = commitMethod.invoke(targetTCCBean, args);
                 if (ret != null) {
                     if (ret instanceof TwoPhaseResult) {
@@ -155,6 +156,7 @@ public class TCCResourceManager extends AbstractResourceManager {
             LOGGER.error(msg, ExceptionUtil.unwrap(t));
             return BranchStatus.PhaseTwo_CommitFailed_Retryable;
         } finally {
+            // 执行钩子方法
             doAfterTccCommit(xid, branchId, tccResource.getActionName(), businessActionContext);
             // clear the action context
             BusinessActionContextUtil.clear();
@@ -206,6 +208,7 @@ public class TCCResourceManager extends AbstractResourceManager {
                     throw e.getCause();
                 }
             } else {
+                // 触发开发者定义的 cancel 方法
                 ret = rollbackMethod.invoke(targetTCCBean, args);
                 if (ret != null) {
                     if (ret instanceof TwoPhaseResult) {

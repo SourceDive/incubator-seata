@@ -80,6 +80,7 @@ public class ActionInterceptorHandler {
         actionContext.setBranchType(businessActionParam.getBranchType());
 
         //Creating Branch Record
+        // 注册分支事务
         String branchId = doTxActionLogStore(method, arguments, businessActionParam, actionContext);
         actionContext.setBranchId(branchId);
         //MDC put branchId
@@ -110,6 +111,7 @@ public class ActionInterceptorHandler {
             try {
                 doAfterTccPrepare(xid, branchId, actionName, actionContext);
                 //to report business action context finally if the actionContext.getUpdated() is true
+                // 上报分支事务状态。
                 BusinessActionContextUtil.reportContext(actionContext);
             } finally {
                 if (previousActionContext != null) {
@@ -195,6 +197,7 @@ public class ActionInterceptorHandler {
     }
 
     /**
+     * <p>注册分支事务。</p>
      * Creating Branch Record
      *
      * @param method              the method

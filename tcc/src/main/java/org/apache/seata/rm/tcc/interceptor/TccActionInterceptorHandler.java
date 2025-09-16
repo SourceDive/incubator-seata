@@ -70,6 +70,7 @@ public class TccActionInterceptorHandler extends AbstractProxyInvocationHandler 
             return invocation.proceed();
         }
         Method method = invocation.getMethod();
+        // 解析注解 @TwoPhaseBusinessAction
         Annotation businessAction = parseAnnotation(method);
 
         //try method
