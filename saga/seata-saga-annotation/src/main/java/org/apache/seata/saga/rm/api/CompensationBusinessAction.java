@@ -42,6 +42,7 @@ public @interface CompensationBusinessAction {
     String name();
 
     /**
+     * <p>补偿方法名称。</p>
      * compensation method name
      *
      * @return the string

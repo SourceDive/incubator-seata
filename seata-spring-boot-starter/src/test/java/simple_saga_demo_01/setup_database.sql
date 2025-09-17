@@ -44,4 +44,3 @@ INSERT INTO account (user_id, balance) VALUES ('U001', 1000);
 SELECT '=== 初始数据 ===' as info;
 SELECT * FROM inventory;
 SELECT * FROM account;
-

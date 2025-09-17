@@ -1,0 +1,42 @@
+# Seata 配置 - 使用MySQL数据库
+seata:
+  enabled: true
+  application-id: seata-test
+  tx-service-group: my_test_tx_group
+  service:
+    vgroup-mapping:
+      my_test_tx_group: default
+    grouplist:
+      default: 127.0.0.1:8091
+  config:
+    type: file
+  registry:
+    type: file
+  data-source-proxy-mode: ""
+  client:
+    rm:
+      async-commit-buffer-limit: 10000
+      lock:
+        retry-interval: 10
+        retry-times: 30
+        retry-policy-branch-rollback-on-conflict: true
+      report-retry-count: 5
+      table-meta-check-enable: false
+      report-success-enable: false
+    tm:
+      commit-retry-count: 5
+      rollback-retry-count: 5
+      default-global-transaction-timeout: 180000
+      default-global-transaction-retry-timeout: 180000
+      default-global-transaction-lock-retry-timeout: 180000
+      default-global-transaction-lock-retry-policy-branch-rollback-on-conflict: true
+  log:
+    exception-rate: 100
+
+# MySQL 数据库配置
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/seata_saga_test?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+#    username: root
+#    password: mysql123

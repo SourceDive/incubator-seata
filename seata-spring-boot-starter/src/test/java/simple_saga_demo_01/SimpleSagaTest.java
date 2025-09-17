@@ -80,7 +80,6 @@ public class SimpleSagaTest {
         int quantity = 2;
         
         try {
-            // 执行Saga事务（使用@SagaStart注解）
             sagaOrchestrator.executeSagaSuccess(orderId, userId, productId, amount, quantity);
             
             // 验证结果
