@@ -27,9 +27,12 @@ public class SagaCreateOrderImpl implements SagaCreateOrder {
      */
     @CompensationBusinessAction(
             name = "createOrder",
-            compensationMethod = "compensateCreateOrder")
+            compensationMethod = "rollback")
     @Override
     public void commit(String orderId, String userId, int amount, BusinessActionContext context) {
+        System.out.println("=== Saga正向操作：创建订单 ===");
+        System.out.println("订单ID: " + orderId + ", 用户ID: " + userId + ", 金额: " + amount);
+
         // 保存参数到上下文，用于补偿操作
         if (context != null) {
             Map<String, Object> actionContext = new HashMap<>();
@@ -39,12 +42,8 @@ public class SagaCreateOrderImpl implements SagaCreateOrder {
             context.setActionContext(actionContext);
         }
 
-        System.out.println("=== Saga正向操作：创建订单 ===");
-        System.out.println("订单ID: " + orderId + ", 用户ID: " + userId + ", 金额: " + amount);
-
         String sql = "INSERT INTO orders (order_id, user_id, amount, status) VALUES (?, ?, ?, 'CREATED')";
         jdbcTemplate.update(sql, orderId, userId, amount);
-
 
         System.out.println("订单创建成功");
     }

@@ -9,7 +9,7 @@ import org.apache.seata.rm.tcc.api.BusinessActionContext;
  */
 public interface SagaDeductAccount {
 
-    void commit(String productId, int quantity,
+    void commit(String userId, int amount,
                 BusinessActionContext context);
     void rollback(BusinessActionContext context);
 }

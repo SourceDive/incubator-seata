@@ -26,7 +26,8 @@ public class SagaConfig {
         dataSource.setUsername("root");
         dataSource.setPassword("mysql123");
 
-        return dataSource;
+        // 使用DataSourceProxy包装，启用Seata AT模式
+        return new DataSourceProxy(dataSource, "mysql");
     }
 
     @Bean("sagaJdbcTemplate")
