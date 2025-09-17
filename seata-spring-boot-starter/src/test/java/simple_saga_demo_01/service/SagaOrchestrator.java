@@ -12,8 +12,12 @@ import org.apache.seata.spring.annotation.GlobalTransactional;
 public class SagaOrchestrator {
     
     @Autowired
-    private OrderSagaService orderSagaService;
-    
+    private SagaDeductInventory deductInventory;
+    @Autowired
+    private SagaDeductAccount deductAccount;
+    @Autowired
+    private SagaCreateOrder createOrder;
+
     /**
      * 执行Saga事务 - 成功场景
      * 使用@GlobalTransactional注解管理全局事务
@@ -24,13 +28,13 @@ public class SagaOrchestrator {
         
         try {
             // 步骤1：创建订单
-            orderSagaService.createOrder(orderId, userId, amount, null);
+            createOrder.commit(orderId, userId, amount, null);
             
             // 步骤2：扣减库存
-            orderSagaService.deductInventory(productId, quantity, null);
+            deductInventory.commit(productId, quantity, null);
             
             // 步骤3：扣减账户余额
-            orderSagaService.deductAccount(userId, amount, null);
+            deductAccount.commit(userId, amount, null);
             
             System.out.println("=== Saga事务执行成功 ===");
             
@@ -51,14 +55,14 @@ public class SagaOrchestrator {
         
         try {
             // 步骤1：创建订单
-            orderSagaService.createOrder(orderId, userId, amount, null);
-            
-            // 步骤2：扣减库存（这里会失败）
-            orderSagaService.deductInventory(productId, quantity, null);
-            
-            // 步骤3：扣减账户余额（不会执行到这里）
-            orderSagaService.deductAccount(userId, amount, null);
-            
+            createOrder.commit(orderId, userId, amount, null);
+
+            // 步骤2：扣减库存
+            deductInventory.commit(productId, quantity, null);
+
+            // 步骤3：扣减账户余额
+            deductAccount.commit(userId, amount, null);
+
             System.out.println("=== Saga事务执行成功 ===");
             
         } catch (Exception e) {
@@ -78,10 +82,10 @@ public class SagaOrchestrator {
         
         try {
             // 创建订单
-            orderSagaService.createOrder(orderId, userId, amount, null);
+            createOrder.commit(orderId, userId, amount, null);
             
             // 扣减账户余额
-            orderSagaService.deductAccount(userId, amount, null);
+            deductAccount.commit(userId, amount, null);
             
             System.out.println("=== 简单Saga示例完成 ===");
             

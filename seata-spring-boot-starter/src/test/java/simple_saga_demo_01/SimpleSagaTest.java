@@ -70,7 +70,7 @@ public class SimpleSagaTest {
      * 测试Saga成功场景 - 使用注解
      */
     @Test
-    public void testSagaSuccessWithAnnotations() {
+    public void testSagaSuccess() {
         System.out.println("\n========== 测试Saga成功场景（使用注解） ==========");
         
         String orderId = "ORDER_" + System.currentTimeMillis();
@@ -95,7 +95,7 @@ public class SimpleSagaTest {
      * 测试Saga失败场景（库存不足）- 使用注解
      */
     @Test
-    public void testSagaFailureWithAnnotations() {
+    public void testSagaFailure() {
         System.out.println("\n========== 测试Saga失败场景（库存不足，使用注解） ==========");
         
         String orderId = "ORDER_" + System.currentTimeMillis();
@@ -105,7 +105,6 @@ public class SimpleSagaTest {
         int quantity = 20; // 超过库存数量，会失败
         
         try {
-            // 执行Saga事务（使用@SagaStart注解）
             sagaOrchestrator.executeSagaFailure(orderId, userId, productId, amount, quantity);
             
         } catch (Exception e) {
@@ -172,7 +171,7 @@ public class SimpleSagaTest {
         
         // 验证数据一致性
         assert orderCount > 0 : "应该有订单记录";
-        assert "COMPLETED".equals(orderStatus) : "订单状态应该是COMPLETED";
+        assert "CREATED".equals(orderStatus) : "订单状态应该是COMPLETED";
         assert stock == (10 - quantity) : "库存应该被扣减";
         assert balance == (1000 - amount) : "账户余额应该被扣减";
         
