@@ -33,11 +33,13 @@ public class OrderSagaService {
         jdbcTemplate.update(sql, orderId, userId, amount);
 
         // 保存参数到上下文，用于补偿操作
-        Map<String, Object> actionContext = new HashMap<>();
-        actionContext.put("orderId", orderId);
-        actionContext.put("userId", userId);
-        actionContext.put("amount", amount);
-        context.setActionContext(actionContext);
+        if (context != null) {
+            Map<String, Object> actionContext = new HashMap<>();
+            actionContext.put("orderId", orderId);
+            actionContext.put("userId", userId);
+            actionContext.put("amount", amount);
+            context.setActionContext(actionContext);
+        }
 
         System.out.println("订单创建成功");
     }
@@ -75,10 +77,12 @@ public class OrderSagaService {
         }
 
         // 保存参数到上下文
-        Map<String, Object> actionContext = new HashMap<>();
-        actionContext.put("productId", productId);
-        actionContext.put("quantity", quantity);
-        context.setActionContext(actionContext);
+        if (context != null) {
+            Map<String, Object> actionContext = new HashMap<>();
+            actionContext.put("productId", productId);
+            actionContext.put("quantity", quantity);
+            context.setActionContext(actionContext);
+        }
 
         System.out.println("库存扣减成功");
     }
@@ -117,10 +121,12 @@ public class OrderSagaService {
         }
 
         // 保存参数到上下文
-        Map<String, Object> actionContext = new HashMap<>();
-        actionContext.put("userId", userId);
-        actionContext.put("amount", amount);
-        context.setActionContext(actionContext);
+        if (context != null) {
+            Map<String, Object> actionContext = new HashMap<>();
+            actionContext.put("userId", userId);
+            actionContext.put("amount", amount);
+            context.setActionContext(actionContext);
+        }
 
         System.out.println("账户扣减成功");
     }
