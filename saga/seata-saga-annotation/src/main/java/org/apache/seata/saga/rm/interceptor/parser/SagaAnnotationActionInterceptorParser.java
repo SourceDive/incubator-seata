@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * <p>saga注解解析器，解析 @CompensationBusinessAction </p>
  * saga-annotation proxyInvocationHandler parser
  * used to identify the saga annotation @CompensationBusinessAction and return the proxy handler.
  */
