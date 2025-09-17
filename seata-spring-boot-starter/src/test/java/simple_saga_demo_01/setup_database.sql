@@ -1,0 +1,47 @@
+-- Saga测试数据库初始化脚本
+-- 创建测试数据库
+CREATE DATABASE IF NOT EXISTS seata_saga_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE seata_saga_test;
+
+-- 订单表
+DROP TABLE IF EXISTS orders;
+CREATE TABLE orders (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(50) UNIQUE NOT NULL,
+    user_id VARCHAR(50) NOT NULL,
+    amount INT NOT NULL,
+    status VARCHAR(20) DEFAULT 'CREATED',
+    created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 库存表
+DROP TABLE IF EXISTS inventory;
+CREATE TABLE inventory (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    product_id VARCHAR(50) UNIQUE NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 账户表
+DROP TABLE IF EXISTS account;
+CREATE TABLE account (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50) UNIQUE NOT NULL,
+    balance INT NOT NULL DEFAULT 0,
+    created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 插入测试数据
+INSERT INTO inventory (product_id, stock) VALUES ('P001', 10);
+INSERT INTO account (user_id, balance) VALUES ('U001', 1000);
+
+-- 查看初始数据
+SELECT '=== 初始数据 ===' as info;
+SELECT * FROM inventory;
+SELECT * FROM account;
+
