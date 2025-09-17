@@ -74,6 +74,10 @@ public class SagaAnnotationActionInterceptorParser implements InterfaceParser {
     }
 
 
+    /**
+     * Saga 模式主要基于本地状态机和注解，不需要解析远程服务
+     * Saga 的补偿操作都是本地方法调用，不涉及远程调用
+     */
     @Override
     public IfNeedEnhanceBean parseIfNeedEnhancement(Class<?> beanClass) {
         IfNeedEnhanceBean ifNeedEnhanceBean = new IfNeedEnhanceBean();
