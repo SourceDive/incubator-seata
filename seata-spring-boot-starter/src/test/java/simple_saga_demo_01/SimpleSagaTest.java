@@ -92,6 +92,7 @@ public class SimpleSagaTest {
     }
     
     /**
+     * todo 这个测试案例还是失败的，还需要定位原因。
      * 测试Saga失败场景（库存不足）- 使用注解
      */
     @Test
