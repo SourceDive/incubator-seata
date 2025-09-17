@@ -1,6 +1,6 @@
 package simple_saga_demo_01.config;
 
-import org.apache.seata.rm.datasource.DataSourceProxy;
+// Saga模式不需要DataSourceProxy
 import org.apache.seata.spring.annotation.GlobalTransactionScanner;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,8 +26,8 @@ public class SagaConfig {
         dataSource.setUsername("root");
         dataSource.setPassword("mysql123");
 
-        // 使用DataSourceProxy包装，启用Seata AT模式
-        return new DataSourceProxy(dataSource, "mysql");
+        // Saga模式：直接返回普通DataSource，不需要DataSourceProxy
+        return dataSource;
     }
 
     @Bean("sagaJdbcTemplate")
