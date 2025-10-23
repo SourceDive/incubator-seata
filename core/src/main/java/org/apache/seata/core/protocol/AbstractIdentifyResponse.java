@@ -17,6 +17,7 @@
 package org.apache.seata.core.protocol;
 
 /**
+ * <p>抽象响应的基类。</p>
  * The type Abstract identify response.
  *
  */

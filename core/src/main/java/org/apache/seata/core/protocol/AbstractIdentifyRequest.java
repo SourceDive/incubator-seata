@@ -18,6 +18,7 @@ package org.apache.seata.core.protocol;
 
 
 /**
+ * <p>一个抽象请求基类。</p>
  * The type Abstract identify request.
  *
  */
